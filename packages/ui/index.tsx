@@ -71,6 +71,7 @@ export interface ButtonProps {
   variant?: 'primary' | 'secondary';
   theme?: ThemeType;
   colorMode?: ColorMode;
+  type?: 'button' | 'submit' | 'reset';
 }
 
 export function Button({ 
@@ -79,7 +80,8 @@ export function Button({
   onClick, 
   variant = 'primary',
   theme = 'gigs',
-  colorMode = 'light'
+  colorMode = 'light',
+  type = 'button'
 }: ButtonProps) {
   const themeStyles = variant === 'primary' 
     ? THEMES[theme].buttonPrimary 
@@ -90,7 +92,8 @@ export function Button({
   
   return (
     <button
-      className={`px-4 py-2 rounded-md font-medium transition-colors ${themeStyles} ${modeStyles} ${className}`}
+      type={type}
+      className={`px-4 py-2 rounded-lg font-medium transition-colors ${themeStyles} ${modeStyles} ${className}`}
       onClick={onClick}
     >
       {children}
@@ -111,7 +114,7 @@ export function Card({
   theme = 'gigs',
   colorMode = 'light' 
 }: CardProps) {
-  const baseClasses = 'rounded-lg shadow-md p-6';
+  const baseClasses = 'rounded-xl shadow-md p-6';
   const modeClasses = colorMode === 'dark' 
     ? 'bg-gray-800 text-white' 
     : 'bg-white text-gray-800';
@@ -206,16 +209,17 @@ export function Footer({
 export interface LogoProps {
   type: 'gigs' | 'showcase';
   className?: string;
+  onClick?: () => void;
 }
 
-export function Logo({ type, className = '' }: LogoProps) {
+export function Logo({ type, className = '', onClick }: LogoProps) {
   const firstWordColor = 'text-gray-800 dark:text-white';
   const secondWordColor = type === 'gigs' 
     ? THEMES.gigs.icon 
     : THEMES.showcase.icon;
   
   return (
-    <div className={`font-bold flex items-center ${className}`}>
+    <div className={`font-bold flex items-center ${className} ${onClick ? 'cursor-pointer' : ''}`} onClick={onClick}>
       <span className={`${firstWordColor}`}>Vumi</span>
       <span className={`${secondWordColor}`}>
         {type === 'gigs' ? 'Gigs' : 'Showcase'}
@@ -265,7 +269,12 @@ export function Header({
   const handleNavigation = (path: string) => {
     if (onNavigation) {
       onNavigation(path);
+      setIsMenuOpen(false);
     }
+  };
+  
+  const handleLogoClick = () => {
+    handleNavigation('/');
   };
   
   const baseClasses = 'fixed top-0 left-0 right-0 z-50 px-4 py-3 shadow-md transition-colors duration-200';
@@ -278,9 +287,11 @@ export function Header({
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
-          <a href={currentApp === 'gigs' ? '/gigs' : '/showcase'} className="flex items-center">
-            <Logo type={currentApp} className="text-2xl" />
-          </a>
+          <Logo 
+            type={currentApp} 
+            className="text-2xl" 
+            onClick={handleLogoClick}
+          />
         </div>
         
         {/* Navigation - Desktop */}
@@ -288,13 +299,21 @@ export function Header({
           {currentApp === 'gigs' ? (
             <>
               <a 
-                href="/find-gigs" 
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/find-gigs');
+                }}
                 className="font-medium transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 Find Gigs
               </a>
               <a 
-                href="/post-gig" 
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/post-gig');
+                }}
                 className="font-medium transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 Post a Gig
@@ -310,7 +329,11 @@ export function Header({
                 Creators
               </a>
               <a 
-                href="/how-it-works" 
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/how-it-works');
+                }}
                 className="font-medium transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 How it Works
@@ -349,7 +372,11 @@ export function Header({
                 Creators
               </a>
               <a 
-                href="/plans" 
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/plans');
+                }}
                 className="font-medium transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 Plans
@@ -363,7 +390,7 @@ export function Header({
           {/* Theme Toggle */}
           <button 
             onClick={toggleColorMode}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             aria-label={`Switch to ${contextColorMode === 'light' ? 'dark' : 'light'} mode`}
           >
             {contextColorMode === 'light' ? (
@@ -390,7 +417,7 @@ export function Header({
             <div className="relative">
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               >
                 <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center">
                   <span className="text-sm font-medium">{userName.charAt(0).toUpperCase()}</span>
@@ -399,10 +426,37 @@ export function Header({
               </button>
               
               {isMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 z-10">
-                  <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Profile</a>
-                  <a href="/settings" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Settings</a>
-                  <a href="/logout" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">Logout</a>
+                <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 z-10">
+                  <a 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('/profile');
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Profile
+                  </a>
+                  <a 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('/settings');
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Settings
+                  </a>
+                  <a 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation('/logout');
+                    }}
+                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Logout
+                  </a>
                 </div>
               )}
             </div>
@@ -419,7 +473,7 @@ export function Header({
           
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -440,14 +494,22 @@ export function Header({
             {currentApp === 'gigs' ? (
               <>
                 <a 
-                  href="/find-gigs" 
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigation('/find-gigs');
+                  }}
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Find Gigs
                 </a>
                 <a 
-                  href="/post-gig" 
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigation('/post-gig');
+                  }}
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Post a Gig
                 </a>
@@ -456,15 +518,18 @@ export function Header({
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavigation('/creators');
-                    setIsMenuOpen(false);
                   }}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Creators
                 </a>
                 <a 
-                  href="/how-it-works" 
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigation('/how-it-works');
+                  }}
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   How it Works
                 </a>
@@ -476,9 +541,8 @@ export function Header({
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavigation('/showcases');
-                    setIsMenuOpen(false);
                   }}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Showcases
                 </a>
@@ -487,9 +551,8 @@ export function Header({
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavigation('/projects');
-                    setIsMenuOpen(false);
                   }}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Projects
                 </a>
@@ -498,15 +561,18 @@ export function Header({
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavigation('/creators');
-                    setIsMenuOpen(false);
                   }}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Creators
                 </a>
                 <a 
-                  href="/plans" 
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigation('/plans');
+                  }}
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Plans
                 </a>

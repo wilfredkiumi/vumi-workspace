@@ -29,11 +29,7 @@ if (filter) {
     console.log('To run a specific app, use: npm run dev -- --filter=app-name');
     console.log('Or use the direct commands: npm run dev:gigs or npm run dev:showcase');
     
-    // Ask the user which app to run
-    console.log('\nPlease choose an app to run:');
-    console.log('1. vumi-gigs (port 3000)');
-    console.log('2. vumi-showcase (port 3001)');
-    console.log('\nStarting vumi-gigs by default...');
+    console.log('\nStarting vumi-gigs on port 3000...');
     
     execSync(`cd apps/vumi-gigs && npm run dev`, { stdio: 'inherit' });
   } catch (error) {

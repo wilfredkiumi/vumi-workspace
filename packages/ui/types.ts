@@ -83,6 +83,21 @@ export interface Creator {
   // Projects related fields
   projects?: Project[];
   showcases?: Showcase[];
+  // Additional fields
+  previousClients?: string[];
+  preferredProjectTypes?: string[];
+  awards?: {
+    title: string;
+    organization: string;
+    year: string;
+    description?: string;
+  }[];
+  education?: {
+    degree: string;
+    institution: string;
+    year: string;
+    description?: string;
+  }[];
 }
 
 export interface NavigationItem {

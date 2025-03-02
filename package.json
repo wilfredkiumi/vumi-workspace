@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "node scripts/run-dev.js",
     "build": "node scripts/run-build.js",
+    "build:gigs": "cd apps/vumi-gigs && npm run build",
+    "build:showcase": "cd apps/vumi-showcase && npm run build",
     "lint": "node scripts/run-lint.js",
     "dev:gigs": "cd apps/vumi-gigs && npm run dev",
     "dev:showcase": "cd apps/vumi-showcase && npm run dev"

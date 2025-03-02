@@ -21,7 +21,6 @@ import {
   Video,
   Mic,
   Zap,
-  Calendar,
   Lock
 } from 'lucide-react';
 import { Creator, TabProps, ProfileMode } from './types';
@@ -184,7 +183,7 @@ export function CreatorProfile({
             {creator.categories.map((category, index) => (
               <span 
                 key={index} 
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm"
               >
                 {category}
               </span>
@@ -196,7 +195,7 @@ export function CreatorProfile({
             {creator.skills.map((skill, index) => (
               <span 
                 key={index} 
-                className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm"
               >
                 {skill}
               </span>
@@ -216,7 +215,7 @@ export function CreatorProfile({
         <div className="mt-6">
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Audience Size</h3>
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
               <div className="flex items-center justify-between">
                 <span className="text-gray-600 dark:text-gray-300">Total Followers</span>
                 <span className="text-xl font-bold text-gray-800 dark:text-white">
@@ -236,7 +235,7 @@ export function CreatorProfile({
               {creator.platforms.map((platform, index) => (
                 <span 
                   key={index} 
-                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm flex items-center"
+                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm flex items-center"
                 >
                   {getSocialIcon(platform)}
                   <span className="ml-1">{platform}</span>
@@ -267,7 +266,7 @@ export function CreatorProfile({
                 return (
                   <span 
                     key={index} 
-                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm flex items-center"
+                    className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm flex items-center"
                   >
                     {icon}
                     {type}
@@ -287,7 +286,7 @@ export function CreatorProfile({
         <div className="mt-6">
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Team</h3>
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
               <div className="flex items-center justify-between">
                 <span className="text-gray-600 dark:text-gray-300">Team Size</span>
                 <span className="text-xl font-bold text-gray-800 dark:text-white">
@@ -303,7 +302,7 @@ export function CreatorProfile({
               {creator.specializations.map((specialization, index) => (
                 <span 
                   key={index} 
-                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm"
                 >
                   {specialization}
                 </span>
@@ -317,7 +316,7 @@ export function CreatorProfile({
               {creator.equipmentOwned.map((equipment, index) => (
                 <span 
                   key={index} 
-                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-sm"
+                  className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm"
                 >
                   {equipment}
                 </span>
@@ -328,8 +327,8 @@ export function CreatorProfile({
           {creator.availability && (
             <div>
               <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Availability</h3>
-              <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
-                <Calendar className="h-5 w-5 mr-2 text-gray-600 dark:text-gray-400" />
+              <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
+                <Clock className="h-5 w-5 mr-2 text-gray-600 dark:text-gray-400" />
                 <span className="text-gray-700 dark:text-gray-300">{creator.availability}</span>
               </div>
             </div>
@@ -393,7 +392,7 @@ export function CreatorProfile({
   }
   
   return (
-    <div className="bg-white dark:bg-gray-900 shadow-md rounded-lg overflow-hidden">
+    <div className="bg-white dark:bg-gray-900 shadow-md rounded-xl overflow-hidden">
       {/* Cover Image */}
       <div className="h-48 relative">
         {creator.coverImage ? (
@@ -408,7 +407,7 @@ export function CreatorProfile({
         
         {/* Creator Type Badge */}
         <div className="absolute top-4 right-4 flex space-x-2">
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+          <span className={`px-3 py-1 rounded-lg text-sm font-medium ${
             creator.creatorType === 'influencer' 
               ? 'bg-purple-500 text-white' 
               : 'bg-blue-500 text-white'
@@ -416,7 +415,7 @@ export function CreatorProfile({
             {creator.creatorType === 'influencer' ? 'Influencer' : 'Crew'}
           </span>
           
-          <span className={`px-3 py-1 rounded-full text-sm font-medium ${profileModeBadge.color}`}>
+          <span className={`px-3 py-1 rounded-lg text-sm font-medium ${profileModeBadge.color}`}>
             {profileModeBadge.label}
           </span>
         </div>

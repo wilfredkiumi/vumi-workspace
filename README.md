@@ -1,19 +1,26 @@
-# Vumi Monorepo
+# Vumi Gigs Platform
+
+A platform for finding and posting freelance opportunities, built with React, TypeScript, and AWS Amplify.
+
+## Project Structure
 
 This is a monorepo containing two applications:
-
-## Apps
 
 - **vumi-gigs**: A platform for finding and posting freelance opportunities.
 - **vumi-showcase**: A platform for discovering and showcasing creative portfolios.
 
-## Packages
-
-- **ui**: Shared UI components used by both applications.
-
 ## Getting Started
 
-### Install dependencies
+### Prerequisites
+
+- Node.js (v16 or later)
+- npm (v7 or later)
+- AWS Account with Amplify CLI configured
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
 
 ```bash
 npm install
@@ -21,47 +28,70 @@ npm install
 
 ### Development
 
-To run all apps (will start the first app by default):
+To run the Vumi Gigs application:
 
 ```bash
-npm run dev
+npm run dev:gigs
 ```
 
-To run a specific app:
+To run the Vumi Showcase application:
 
 ```bash
-# Using the filter parameter
-npm run dev -- --filter=vumi-gigs
-
-# Or using direct commands
-npm run dev:gigs
 npm run dev:showcase
 ```
 
-### Build
+### Building for Production
 
-To build all apps:
-
-```bash
-npm run build
-```
-
-To build a specific app:
+To build the Vumi Gigs application:
 
 ```bash
-npm run build -- --filter=vumi-gigs
+npm run build:gigs
 ```
 
-### Lint
-
-To lint all apps:
+To build the Vumi Showcase application:
 
 ```bash
-npm run lint
+npm run build:showcase
 ```
 
-To lint a specific app:
+## AWS Amplify Setup
 
-```bash
-npm run lint -- --filter=vumi-gigs
-```
+This project uses AWS Amplify Gen 2 for backend services. The backend services are provisioned via a workspace CDK.
+
+### Connecting to Existing Backend
+
+1. Update the `aws-exports.ts` file in `apps/vumi-gigs/src/` with your AWS Amplify configuration.
+2. The application will automatically connect to the backend services when it starts.
+
+### Deploying to AWS Amplify
+
+The project includes configuration files for AWS Amplify deployment:
+
+- `amplify.yml` - Root configuration file for the monorepo
+- `apps/vumi-gigs/amplify.yml` - Configuration file for the Vumi Gigs application
+
+To deploy the application:
+
+1. Connect your repository to AWS Amplify
+2. Configure the build settings to use the appropriate amplify.yml file
+3. Deploy the application
+
+## Backend Services
+
+The application connects to the following backend services:
+
+- **Authentication**: AWS Cognito for user authentication
+- **API**: AWS AppSync GraphQL API for data access
+- **Storage**: Amazon S3 for file storage
+
+## Features
+
+- User authentication and profile management
+- Gig posting and discovery
+- Creator profiles and portfolios
+- Real-time updates with GraphQL subscriptions
+- Secure payment processing
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

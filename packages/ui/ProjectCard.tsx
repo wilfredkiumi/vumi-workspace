@@ -54,7 +54,7 @@ export function ProjectCard({
   if (compact) {
     return (
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
         onClick={handleClick}
       >
         <div className="h-32 relative">
@@ -79,7 +79,7 @@ export function ProjectCard({
   
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
       onClick={handleClick}
     >
       {/* Thumbnail */}

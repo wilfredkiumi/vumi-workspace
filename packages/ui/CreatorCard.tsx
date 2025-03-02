@@ -50,7 +50,7 @@ export function CreatorCard({
   
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
       onClick={handleClick}
     >
       {/* Cover/Header */}
@@ -106,7 +106,7 @@ export function CreatorCard({
               )}
             </div>
             {creator.verified && (
-              <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-0.5 rounded-full">
+              <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full">
                 <Check className="h-3 w-3" />
               </div>
             )}

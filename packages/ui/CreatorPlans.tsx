@@ -44,7 +44,7 @@ export function CreatorPlans({
             return (
               <div 
                 key={plan.id}
-                className={`relative p-8 bg-white dark:bg-gray-800 border rounded-lg shadow-sm flex flex-col
+                className={`relative p-8 bg-white dark:bg-gray-800 border rounded-xl shadow-sm flex flex-col
                   ${plan.popular ? 'border-2 border-primary-500 dark:border-primary-400' : 'border-gray-200 dark:border-gray-700'}
                   ${isCurrentPlan ? 'ring-2 ring-primary-500 dark:ring-primary-400' : ''}
                 `}

@@ -49,7 +49,7 @@ export function ShowcaseCard({
   if (compact) {
     return (
       <div 
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+        className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
         onClick={handleClick}
       >
         <div className="h-32 relative">
@@ -80,7 +80,7 @@ export function ShowcaseCard({
   
   return (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
       onClick={handleClick}
     >
       {/* Thumbnail */}
@@ -121,7 +121,7 @@ export function ShowcaseCard({
             {getAttendanceTypeIcon()}
             <span>{showcase.location}</span>
             {showcase.attendanceType === 'hybrid' && (
-              <span className="ml-1 text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-1.5 rounded">
+              <span className="ml-1 text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-1.5 rounded-lg">
                 Hybrid
               </span>
             )}
@@ -141,14 +141,14 @@ export function ShowcaseCard({
             {showcase.categories.slice(0, 2).map((category, index) => (
               <span 
                 key={index} 
-                className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs flex items-center"
+                className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs flex items-center"
               >
                 <Tag className="h-3 w-3 mr-1" />
                 {category}
               </span>
             ))}
             {showcase.categories.length > 2 && (
-              <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full text-xs">
+              <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-xs">
                 +{showcase.categories.length - 2} more
               </span>
             )}

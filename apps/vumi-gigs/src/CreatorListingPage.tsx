@@ -310,7 +310,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               placeholder="Search by name, skills, or keywords..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -336,7 +336,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
         {/* Filters Panel */}
         {showFilters && (
           <Card theme={theme} colorMode={colorMode} className="mb-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Creator Type Filter */}
               <div>
                 <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Creator Type</h3>
@@ -345,7 +345,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
                     className="flex items-center cursor-pointer"
                     onClick={() => setCreatorType('all')}
                   >
-                    {filters.creatorType === 'all' ? (
+                    {filters.creatorType === ' all' ? (
                       <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
                     ) : (
                       <Square className="h-5 w-5 text-gray-400 mr-2" />
@@ -400,10 +400,13 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
                 </div>
               </div>
               
-              {/* Countries Filter */}
+              {/* Location Filters */}
               <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Countries</h3>
-                <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
+                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Location</h3>
+                
+                {/* Countries */}
+                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Countries</h4>
+                <div className="max-h-24 overflow-y-auto space-y-2 pr-2 mb-4">
                   {allCountries.map((country) => (
                     <div 
                       key={country}
@@ -419,12 +422,10 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
                     </div>
                   ))}
                 </div>
-              </div>
-              
-              {/* Cities Filter */}
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Cities</h3>
-                <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
+                
+                {/* Cities */}
+                <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Cities</h4>
+                <div className="max-h-24 overflow-y-auto space-y-2 pr-2">
                   {allCities
                     .filter(city => 
                       filters.countries.length === 0 || 
@@ -547,7 +548,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl">
             <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No creators found</h3>
             <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">

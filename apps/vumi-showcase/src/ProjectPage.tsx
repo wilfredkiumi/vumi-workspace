@@ -503,5 +503,3 @@ function ProjectPage({ projectId, onBack, onViewCreator }: ProjectPageProps) {
 }
 
 export default ProjectPage;
-
-export default ProjectPage
