@@ -476,7 +476,7 @@ function ProjectPage({ projectId, onBack, onViewCreator }: ProjectPageProps) {
                         )}
                       </div>
                       <div>
-                        <h3 className="text-sm font-medium text- <h3 className="text-sm font-medium text-gray-800 dark:text-white">{contributor.name}</h3>
+                        <h3 className="text-sm font-medium text-gray-800 dark:text-white">{contributor.name}</h3>
                         <p className="text-xs text-gray-600 dark:text-gray-400">{contributor.role}</p>
                       </div>
                     </div>
@@ -503,3 +503,5 @@ function ProjectPage({ projectId, onBack, onViewCreator }: ProjectPageProps) {
 }
 
 export default ProjectPage;
+
+export default ProjectPage

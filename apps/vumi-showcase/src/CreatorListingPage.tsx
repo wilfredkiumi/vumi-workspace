@@ -175,13 +175,6 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
       );
     }
     
-    // Filter by profile mode
-    if (filters.profileMode) {
-      result = result.filter(creator => 
-        creator.mode === filters.profileMode
-      );
-    }
-    
     setFilteredCreators(result);
   }, [searchQuery, filters]);
   
@@ -229,13 +222,6 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
     setFilters(prev => ({
       ...prev,
       creatorType: type
-    }));
-  };
-  
-  const setProfileMode = (mode: ProfileMode | undefined) => {
-    setFilters(prev => ({
-      ...prev,
-      profileMode: mode
     }));
   };
   
@@ -287,9 +273,9 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
             className="flex items-center"
           >
             <Filter className="h-5 w-5 mr-2" />
-            Filters {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all' || filters.profileMode) && (
+            Filters {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all') && (
               <span className="ml-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {filters.skills.length + filters.countries.length + filters.cities.length + (filters.creatorType !== 'all' ? 1 : 0) + (filters.profileMode ? 1 : 0)}
+                {filters.skills.length + filters.countries.length + filters.cities.length + (filters.creatorType !== 'all' ? 1 : 0)}
               </span>
             )}
           </Button>
@@ -337,48 +323,6 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
                       <Square className="h-5 w-5 text-gray-400 mr-2" />
                     )}
                     <span className="text-gray-700 dark:text-gray-300">Crews</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Profile Mode Filter */}
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Profile Type</h3>
-                <div className="space-y-2">
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setProfileMode(undefined)}
-                  >
-                    {!filters.profileMode ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">All Plans</span>
-                  </div>
-                  
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setProfileMode(ProfileMode.PRO)}
-                  >
-                    {filters.profileMode === ProfileMode.PRO ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">Pro</span>
-                  </div>
-                  
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setProfileMode(ProfileMode.PREMIUM)}
-                  >
-                    {filters.profileMode === ProfileMode.PREMIUM ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">Premium</span>
                   </div>
                 </div>
               </div>
@@ -456,7 +400,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
             </div>
             
             {/* Active Filters */}
-            {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all' || filters.profileMode) && (
+            {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all') && (
               <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-sm font-medium text-gray-800 dark:text-white mb-2">Active Filters:</h3>
                 <div className="flex flex-wrap gap-2">
@@ -466,18 +410,6 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
                       <button 
                         onClick={() => setCreatorType('all')}
                         className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  )}
-                  
-                  {filters.profileMode && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-                      {filters.profileMode}
-                      <button 
-                        onClick={() => setProfileMode(undefined)}
-                        className="ml-1 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300"
                       >
                         <X className="h-3 w-3" />
                       </button>

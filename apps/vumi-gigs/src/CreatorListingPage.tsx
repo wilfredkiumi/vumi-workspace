@@ -227,13 +227,6 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
       );
     }
     
-    // Filter by profile mode
-    if (filters.profileMode) {
-      result = result.filter(creator => 
-        creator.mode === filters.profileMode
-      );
-    }
-    
     setFilteredCreators(result);
   }, [searchQuery, filters]);
   
@@ -281,13 +274,6 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
     setFilters(prev => ({
       ...prev,
       creatorType: type
-    }));
-  };
-  
-  const setProfileMode = (mode: ProfileMode | undefined) => {
-    setFilters(prev => ({
-      ...prev,
-      profileMode: mode
     }));
   };
   
@@ -339,9 +325,9 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
             className="flex items-center"
           >
             <Filter className="h-5 w-5 mr-2" />
-            Filters {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all' || filters.profileMode) && (
+            Filters {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all') && (
               <span className="ml-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {filters.skills.length + filters.countries.length + filters.cities.length + (filters.creatorType !== 'all' ? 1 : 0) + (filters.profileMode ? 1 : 0)}
+                {filters.skills.length + filters.countries.length + filters.cities.length + (filters.creatorType !== 'all' ? 1 : 0)}
               </span>
             )}
           </Button>
@@ -389,48 +375,6 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
                       <Square className="h-5 w-5 text-gray-400 mr-2" />
                     )}
                     <span className="text-gray-700 dark:text-gray-300">Crews</span>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Profile Mode Filter */}
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Profile Type</h3>
-                <div className="space-y-2">
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setProfileMode(undefined)}
-                  >
-                    {!filters.profileMode ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">All Plans</span>
-                  </div>
-                  
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setProfileMode(ProfileMode.PRO)}
-                  >
-                    {filters.profileMode === ProfileMode.PRO ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">Pro</span>
-                  </div>
-                  
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setProfileMode(ProfileMode.PREMIUM)}
-                  >
-                    {filters.profileMode === ProfileMode.PREMIUM ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">Premium</span>
                   </div>
                 </div>
               </div>
@@ -508,7 +452,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
             </div>
             
             {/* Active Filters */}
-            {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all' || filters.profileMode) && (
+            {(filters.skills.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.creatorType !== 'all') && (
               <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-sm font-medium text-gray-800 dark:text-white mb-2">Active Filters:</h3>
                 <div className="flex flex-wrap gap-2">
@@ -524,57 +468,45 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
                     </span>
                   )}
                   
-                  {filters.profileMode && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                      {filters.profileMode}
-                      <button 
-                        onClick={() => setProfileMode(undefined)}
-                        className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  )}
-                  
-                  {filters.skills.map((skill) => (
+                  {filters.skills.map(skill => (
                     <span 
                       key={skill}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                     >
                       {skill}
                       <button 
                         onClick={() => toggleSkill(skill)}
-                        className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                        className="ml-1 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200"
                       >
                         <X className="h-3 w-3" />
                       </button>
                     </span>
                   ))}
                   
-                  {filters.countries.map((country) => (
+                  {filters.countries.map(country => (
                     <span 
                       key={country}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
                     >
                       {country}
                       <button 
                         onClick={() => toggleCountry(country)}
-                        className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                        className="ml-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-800 dark:hover:text-yellow-200"
                       >
                         <X className="h-3 w-3" />
                       </button>
                     </span>
                   ))}
                   
-                  {filters.cities.map((city) => (
+                  {filters.cities.map(city => (
                     <span 
                       key={city}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
                     >
                       {city}
                       <button 
                         onClick={() => toggleCity(city)}
-                        className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
+                        className="ml-1 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -602,17 +534,36 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
         </div>
         
         {/* Creators Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCreators.map((creator) => (
-            <CreatorCard
-              key={creator.id}
-              creator={creator}
-              theme={theme}
+        {filteredCreators.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCreators.map((creator) => (
+              <CreatorCard
+                key={creator.id}
+                creator={creator}
+                theme={theme}
+                colorMode={colorMode}
+                onClick={() => handleCreatorClick(creator.id)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <Users className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No creators found</h3>
+            <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto">
+              We couldn't find any creators matching your current filters. Try adjusting your search criteria or clearing some filters.
+            </p>
+            <Button 
+              theme={theme} 
+              variant="secondary" 
               colorMode={colorMode}
-              onClick={() => handleCreatorClick(creator.id)}
-            />
-          ))}
-        </div>
+              onClick={clearFilters}
+              className="mt-4"
+            >
+              Clear All Filters
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Creator, CreatorProfile, useTheme, ProfileMode, CreatorPlans, CreatorPlan } from 'ui';
 import { Button } from 'ui';
+import { CheckCircle, Calendar, Star, Award, User, Briefcase, MapPin, ExternalLink, Image, Layers } from 'lucide-react';
 
 // Sample creator data for demonstration - Influencer type
 const influencerCreator: Creator = {
@@ -93,7 +94,9 @@ const influencerCreator: Creator = {
   freelanceStatus: true,
   fulltimeStatus: false,
   followers: 650000,
-  following: 1200
+  following: 1200,
+  previousClients: ["TechGadget", "SmartHome Inc.", "MobileFirst", "GadgetReview"],
+  preferredProjectTypes: ["Product Reviews", "Sponsored Content", "Brand Ambassadorship", "Tutorial Series"]
 };
 
 // Sample creator data for demonstration - Crew type
@@ -186,7 +189,9 @@ const crewCreator: Creator = {
   mode: ProfileMode.PREMIUM,
   isAvailableForHire: true,
   followers: 65000,
-  following: 500
+  following: 500,
+  previousClients: ["Global Tech Corp", "Fashion Brand X", "Startup Y", "Local Business Z"],
+  preferredProjectTypes: ["Commercial Production", "Documentary", "Corporate Video", "Event Coverage"]
 };
 
 // Sample creator data for additional creators
@@ -262,7 +267,9 @@ const additionalCreator: Creator = {
   freelanceStatus: true,
   fulltimeStatus: false,
   followers: 90000,
-  following: 850
+  following: 850,
+  previousClients: ["Fashion Magazine X", "Local Business Y", "E-commerce Store Z"],
+  preferredProjectTypes: ["Portrait Photography", "Product Photography", "Editorial Shoots"]
 };
 
 // Sample plans data

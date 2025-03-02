@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node ./scripts/run-dev.js",
-    "build": "node ./scripts/run-build.js",
-    "lint": "node ./scripts/run-lint.js",
+    "dev": "node scripts/run-dev.js",
+    "build": "node scripts/run-build.js",
+    "lint": "node scripts/run-lint.js",
     "dev:gigs": "cd apps/vumi-gigs && npm run dev",
     "dev:showcase": "cd apps/vumi-showcase && npm run dev"
   },
