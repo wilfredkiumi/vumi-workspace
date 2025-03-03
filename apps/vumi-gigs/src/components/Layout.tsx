@@ -1,23 +1,28 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Header, Footer, useTheme } from 'ui';
+import { useAuth } from '@vumi/shared';
+import { sampleMessages } from '../data/sampleMessages';
 
 const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, colorMode, setColorMode } = useTheme();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState('');
-
+  
+  // Use auth context instead of local state
+  const { isAuthenticated, user, logout } = useAuth();
+  
   const handleLogin = () => {
-    // Placeholder for login functionality
-    setIsLoggedIn(true);
-    setUserName('Demo User');
+    navigate('/login');
   };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUserName('');
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   const handleColorModeChange = (mode: 'light' | 'dark') => {
@@ -27,6 +32,16 @@ const Layout = () => {
   // Handle navigation from header links
   const handleNavigation = (path: string) => {
     navigate(path);
+  };
+
+  const unreadMessages = sampleMessages.filter(msg => !msg.read).length;
+
+  const handleInboxClick = () => {
+    navigate('/inbox');
+  };
+
+  const handleProfileClick = () => {
+    navigate('/profile');
   };
 
   // Navigation items for the header - using all actual pages
@@ -65,14 +80,17 @@ const Layout = () => {
         onColorModeChange={handleColorModeChange}
         onLogin={handleLogin}
         onLogout={handleLogout}
-        isLoggedIn={isLoggedIn}
-        userName={userName}
+        isLoggedIn={isAuthenticated}
+        userName={user?.name || ''}
         currentApp="gigs"
         theme={theme}
         colorMode={colorMode}
         onNavigation={handleNavigation}
         navigationItems={navItems}
         currentPath={getCurrentSection()}
+        unreadMessages={unreadMessages}
+        onInboxClick={handleInboxClick}
+        onProfileClick={handleProfileClick}
       />
       
       <main className="flex-grow">

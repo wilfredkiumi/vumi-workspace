@@ -14,7 +14,7 @@ import {
   Users
 } from 'lucide-react';
 import { Stage, LocalStageStream, StageEvents } from 'amazon-ivs-web-broadcast';
-import { useAuth } from '../contexts/AuthContext';
+import { AuthContextValue } from '../../types/auth';
 
 interface ChatMessage {
   id: string;
@@ -27,11 +27,11 @@ interface VideoMeetingPageProps {
   meetingId: string;
   gigId: string;
   onClose?: () => void;
+  user: AuthContextValue['user'];
 }
 
-export function VideoMeetingPage({ meetingId, gigId, onClose }: VideoMeetingPageProps) {
+export function VideoMeetingPage({ meetingId, gigId, onClose, user }: VideoMeetingPageProps) {
   const { theme, colorMode } = useTheme();
-  const { user } = useAuth();
   
   // Refs
   const localVideoRef = useRef<HTMLVideoElement>(null);

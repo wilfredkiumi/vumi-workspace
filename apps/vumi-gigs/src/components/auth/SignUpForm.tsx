@@ -1,59 +1,144 @@
-import { useState  } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Button, Card } from 'ui';
-import {  Mail, User, AlertTriangle , Lock } from 'lucide-react';
+import React, { useState } from 'react';
+import { Button, Card, useTheme } from 'ui';
+import { Mail, AlertTriangle, Lock, User } from 'lucide-react';
+import { useAuth } from '@vumi/shared';
 
-interface SignUpFormProps {
+interface SignupFormProps {
   onSuccess?: () => void;
-  onSignIn?: () => void;
+  onLogin?: () => void;
+  onCancel?: () => void;
 }
 
-export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
-  const { signUp } = useAuth();
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    name: ''
-  });
-  const [error, setError] = useState<string | null>(null);
+export function SignupForm({ onSuccess, onLogin, onCancel }: SignupFormProps) {
+  const { theme, colorMode } = useTheme();
+  const { signup } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [confirmationSent, setConfirmationSent] = useState(false);
+  const [confirmCode, setConfirmCode] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setIsLoading(true);
+    setError(null);
 
     try {
-      await signUp(
-        formData.username,
-        formData.password,
-        formData.email,
-        formData.name
-      );
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        setError('Passwords do not match');
+        setIsLoading(false);
+        return;
+      }
+      
+      if (!email || !password || !name) {
+        setError('Please fill in all required fields');
+        setIsLoading(false);
+        return;
+      }
+      
+      // Real signup with AWS Cognito
+      await signup({
+        email,
+        password,
+        name
+      });
+      
+      // Show confirmation code input if signup was successful
+      setConfirmationSent(true);
+      
+    } catch (err: any) {
+      console.error('Signup error:', err);
+      setError(err.message || 'Failed to sign up. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  const handleConfirmSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      await useAuth().confirmSignUp(email, confirmCode);
+      
       if (onSuccess) {
         onSuccess();
       }
-    } catch (err) {
-      console.error('Sign up error:', err);
-      setError('Error creating account. Please try again.');
+    } catch (err: any) {
+      console.error('Confirmation error:', err);
+      setError(err.message || 'Failed to confirm signup. Please try again.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  // Show confirmation code input if signup was successful
+  if (confirmationSent) {
+    return (
+      <Card className="max-w-md w-full mx-auto p-8">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          Confirm Your Email
+        </h2>
+        
+        <p className="mb-4 text-gray-700 dark:text-gray-300">
+          We've sent a confirmation code to your email address. Please enter that code below to complete your registration.
+        </p>
+        
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 dark:bg-red-900 rounded-lg flex items-start">
+            <AlertTriangle className="h-5 w-5 text-red-500 dark:text-red-400 mr-2 flex-shrink-0 mt-0.5" />
+            <p className="text-red-800 dark:text-red-200">{error}</p>
+          </div>
+        )}
+        
+        <form onSubmit={handleConfirmSignUp} className="space-y-6">
+          <div>
+            <label htmlFor="confirmCode" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              Confirmation Code
+            </label>
+            <input
+              id="confirmCode"
+              type="text"
+              value={confirmCode}
+              onChange={(e) => setConfirmCode(e.target.value)}
+              className="block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              required
+            />
+          </div>
+          
+          <Button
+            theme={theme}
+            variant="primary"
+            colorMode={colorMode}
+            type="submit"
+            className="w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Confirming...' : 'Confirm Registration'}
+          </Button>
+        </form>
+        
+        <div className="mt-4 text-center">
+          <button
+            onClick={onLogin}
+            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+          >
+            Back to Sign In
+          </button>
+        </div>
+      </Card>
+    );
+  }
 
   return (
-    <div className="max-w-md w-full mx-auto">
+    <Card className="max-w-md w-full mx-auto p-8">
       <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-        Create Your Account
+        Create Account
       </h2>
 
       {error && (
@@ -74,30 +159,9 @@ export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
             </div>
             <input
               id="name"
-              name="name"
               type="text"
-              value={formData.name}
-              onChange={handleInputChange}
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-              required
-            />
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Username
-          </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <User className="h-5 w-5 text-gray-400" />
-            </div>
-            <input
-              id="username"
-              name="username"
-              type="text"
-              value={formData.username}
-              onChange={handleInputChange}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               required
             />
@@ -114,10 +178,9 @@ export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
             </div>
             <input
               id="email"
-              name="email"
               type="email"
-              value={formData.email}
-              onChange={handleInputChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               required
             />
@@ -134,10 +197,28 @@ export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
             </div>
             <input
               id="password"
-              name="password"
               type="password"
-              value={formData.password}
-              onChange={handleInputChange}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+              required
+            />
+          </div>
+        </div>
+
+        <div>
+          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Confirm Password
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Lock className="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               required
             />
@@ -145,12 +226,14 @@ export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
         </div>
 
         <Button
-          type="submit"
+          theme={theme}
           variant="primary"
+          colorMode={colorMode}
+          type="submit"
           className="w-full"
           disabled={isLoading}
         >
-          {isLoading ? 'Creating account...' : 'Create Account'}
+          {isLoading ? 'Signing up...' : 'Sign Up'}
         </Button>
       </form>
 
@@ -158,13 +241,25 @@ export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Already have an account?{' '}
           <button
-            onClick={onSignIn}
+            onClick={onLogin}
             className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
           >
             Sign in
           </button>
         </p>
       </div>
-    </div>
+
+      {onCancel && (
+        <div className="text-center mt-4">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+    </Card>
   );
 }

@@ -2,9 +2,10 @@ import { useTheme } from 'ui';
 
 interface PlaceholderPageProps {
   title: string;
+  description?: string;
 }
 
-const PlaceholderPage = ({ title }: PlaceholderPageProps) => {
+export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
   const { theme, colorMode } = useTheme();
   
   return (
@@ -15,12 +16,10 @@ const PlaceholderPage = ({ title }: PlaceholderPageProps) => {
             {title}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-8">
-            This page is under development. Check back soon for updates!
+            {description || "This page is under development. Check back soon for updates!"}
           </p>
         </div>
       </div>
     </div>
   );
-};
-
-export default PlaceholderPage;
+}

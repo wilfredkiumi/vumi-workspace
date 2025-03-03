@@ -13,7 +13,6 @@ import {
   Bookmark, 
   Flag, 
   ExternalLink,
-  MessageSquare,
   CheckCircle,
   Star,
   DollarSign 
@@ -25,7 +24,7 @@ interface GigDetailPageProps {
   onBack?: () => void;
 }
 
-function GigDetailPage({ onBack }: GigDetailPageProps) {
+const GigDetailPage: React.FC<GigDetailPageProps> = ({ onBack }) => {
   const { gigId } = useParams();
   const navigate = useNavigate();
   const { theme, colorMode } = useTheme();
@@ -134,6 +133,8 @@ function GigDetailPage({ onBack }: GigDetailPageProps) {
     }
   };
 
+  // Function removed as part of removing the Join Video Meeting button
+
   if (!gig) {
     return (
       <div className="container mx-auto px-4 py-24">
@@ -208,8 +209,8 @@ function GigDetailPage({ onBack }: GigDetailPageProps) {
                 Share
               </Button>
             </div>
+            </div>
           </div>
-        </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
@@ -533,6 +534,6 @@ function GigDetailPage({ onBack }: GigDetailPageProps) {
       </div>
     </div>
   );
-}
+};
 
 export default GigDetailPage;

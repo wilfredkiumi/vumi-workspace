@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer, ReactNode } from 'react';
+import { useAuth } from '@vumi/shared';
 
 // Define the state type
 interface AppState {
@@ -8,6 +9,7 @@ interface AppState {
   selectedCreatorId: string | null;
   selectedGigId: string | null;
   selectedStudioId: string | null;
+  unreadMessages: number;
 }
 
 // Define action types
@@ -17,7 +19,8 @@ type AppAction =
   | { type: 'SET_VIEW'; payload: string }
   | { type: 'SELECT_CREATOR'; payload: string | null }
   | { type: 'SELECT_GIG'; payload: string | null }
-  | { type: 'SELECT_STUDIO'; payload: string | null };
+  | { type: 'SELECT_STUDIO'; payload: string | null }
+  | { type: 'SET_UNREAD_MESSAGES'; payload: number };
 
 // Initial state
 const initialState: AppState = {
@@ -26,7 +29,8 @@ const initialState: AppState = {
   currentView: 'home',
   selectedCreatorId: null,
   selectedGigId: null,
-  selectedStudioId: null
+  selectedStudioId: null,
+  unreadMessages: 0
 };
 
 // Create context
@@ -69,6 +73,11 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         selectedStudioId: action.payload
+      };
+    case 'SET_UNREAD_MESSAGES':
+      return {
+        ...state,
+        unreadMessages: action.payload
       };
     default:
       return state;

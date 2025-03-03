@@ -1,14 +1,36 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import * as path from 'path';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['lucide-react'],
+    include: ['ui', '@vumi/shared'],
+    esbuildOptions: {
+      target: 'es2020'
+    }
+  },
+  build: {
+    target: 'es2020',
+    commonjsOptions: {
+      include: [/node_modules/, /ui/, /@vumi\/shared/]
+    },
+    sourcemap: true
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.mjs'],
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      'src': path.resolve(__dirname, './src')
+    }
   },
   server: {
-    port: 3001,
-    open: true
+    watch: {
+      usePolling: true
+    },
+    fs: {
+      strict: false
+    }
   }
 });
