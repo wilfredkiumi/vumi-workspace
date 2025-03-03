@@ -17,8 +17,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
   const [view, setView] = useState<AuthView>('login');
   const [username, setUsername] = useState('');
 
-  const handleSignUpSuccess = (username: string) => {
-    setUsername(username);
+  const handleSignUpSuccess = () => {
     setView('confirm-signup');
   };
 
@@ -26,8 +25,7 @@ export function AuthModal({ onClose, onSuccess }: AuthModalProps) {
     setView('login');
   };
 
-  const handleForgotPasswordSuccess = (username: string) => {
-    setUsername(username);
+  const handleForgotPasswordSuccess = () => {
     setView('reset-password');
   };
 

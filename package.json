@@ -9,6 +9,9 @@
     "build:gigs": "cd apps/vumi-gigs && npm run build",
     "build:showcase": "cd apps/vumi-showcase && npm run build",
     "lint": "node scripts/run-lint.js",
+    "lint:fix": "node scripts/run-lint.js --fix",
+    "type-check": "node scripts/run-type-check.js",
+    "check": "npm run lint && npm run type-check",
     "dev:gigs": "cd apps/vumi-gigs && npm run dev",
     "dev:showcase": "cd apps/vumi-showcase && npm run dev"
   },

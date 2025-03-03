@@ -51,7 +51,7 @@ export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
   };
 
   return (
-    <Card className="max-w-md w-full mx-auto p-8">
+    <div className="max-w-md w-full mx-auto">
       <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
         Create Your Account
       </h2>
@@ -165,6 +165,6 @@ export function SignUpForm({ onSuccess, onSignIn }: SignUpFormProps) {
           </button>
         </p>
       </div>
-    </Card>
+    </div>
   );
 }
