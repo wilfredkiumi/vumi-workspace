@@ -1,4 +1,4 @@
-import { Auth } from 'aws-amplify';
+import { fetchAuthSession } from '@aws-amplify/auth';
 import { AWS_CONFIG } from '../config/aws-config';
 import { Creator, User } from '../models';
 
@@ -14,8 +14,8 @@ async function apiRequest<T>(
 ): Promise<T> {
   try {
     // Get the current authenticated user's session
-    const session = await Auth.currentSession();
-    const token = session.getIdToken().getJwtToken();
+    const session = await fetchAuthSession();
+    const token = session.tokens?.idToken?.toString() || '';
     
     // Prepare headers with authentication
     const headers = {

@@ -17,7 +17,7 @@ if (filter) {
     process.exit(1);
   }
 } else {
-  // Otherwise, run the first app by default
+  // Otherwise, run both apps concurrently
   try {
     // Get all app directories
     const appsDir = path.join(process.cwd(), 'apps');
@@ -26,14 +26,15 @@ if (filter) {
     });
 
     console.log('Available apps:', apps.join(', '));
-    console.log('To run a specific app, use: npm run dev -- --filter=app-name');
-    console.log('Or use the direct commands: npm run dev:gigs or npm run dev:showcase');
+    console.log('Starting both apps...\n');
     
-    console.log('\nStarting vumi-gigs on port 3000...');
-    
-    execSync(`cd apps/vumi-gigs && npm run dev`, { stdio: 'inherit' });
+    // Run both apps concurrently
+    execSync('concurrently "npm run dev:gigs" "npm run dev:showcase"', { 
+      stdio: 'inherit',
+      shell: true
+    });
   } catch (error) {
-    console.error('Error running dev server:', error.message);
+    console.error('Error running dev servers:', error.message);
     process.exit(1);
   }
 }

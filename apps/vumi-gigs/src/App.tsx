@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Briefcase, Search, FileCheck, Star, Users, Clock, DollarSign, Award } from 'lucide-react';
+import React, { useState } from 'react';
+import { Briefcase, Search, FileCheck, Star, Users, Clock, DollarSign, Award, Building } from 'lucide-react';
 import { Button, Card, THEMES, Header, Footer, Logo, ThemeProvider, useTheme } from 'ui';
 import CreatorProfilePage from './CreatorProfilePage';
 import CreatorListingPage from './CreatorListingPage';
@@ -7,6 +7,7 @@ import GigsListingPage from './GigsListingPage';
 import PostGigForm from './PostGigForm';
 import GigDetailPage from './GigDetailPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { BusinessPlansPage } from './pages/BusinessPlansPage';
 import { AuthProvider } from './contexts/AuthContext';
 
 function LandingPage() {
@@ -50,6 +51,10 @@ function LandingPage() {
       setSelectedGigId(null);
     } else if (path === '/profile') {
       setCurrentView('profile');
+      setSelectedCreatorId(null);
+      setSelectedGigId(null);
+    } else if (path === '/plans') {
+      setCurrentView('plans');
       setSelectedCreatorId(null);
       setSelectedGigId(null);
     }
@@ -99,6 +104,9 @@ function LandingPage() {
         
       case 'profile':
         return <ProfilePage />;
+        
+      case 'plans':
+        return <BusinessPlansPage />;
       
       default:
         return renderHomePage();
@@ -238,6 +246,92 @@ function LandingPage() {
               >
                 Browse All Gigs
               </Button>
+            </div>
+          </div>
+        </section>
+        
+        {/* Plans Section */}
+        <section className="py-16 bg-gray-50 dark:bg-gray-900">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-6 text-gray-800 dark:text-white">
+              Plans for Every Creative Journey
+            </h2>
+            <p className="text-center text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-12">
+              Whether you're an individual creator or an organization, we have tailored solutions to help you showcase your work and connect with your audience.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <Card theme={theme} colorMode={colorMode} className="p-8 hover:shadow-lg transition-shadow">
+                <div className="flex items-center mb-4">
+                  <Briefcase className={`h-10 w-10 ${THEMES.gigs.icon} mr-4`} />
+                  <h3 className="text-2xl font-bold text-gray-800 dark:text-white">Individual Creators</h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  Perfect for game developers, animation producers, and creative professionals looking to showcase their work and grow their career.
+                </p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start">
+                    <Star className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-600 dark:text-gray-300">Professional portfolio showcase</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Star className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-600 dark:text-gray-300">Project collaboration tools</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Star className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-600 dark:text-gray-300">Client management features</span>
+                  </li>
+                </ul>
+                <p className="text-xl font-bold text-gray-800 dark:text-white mb-6">
+                  Starting at $49.99/year
+                </p>
+                <Button 
+                  theme={theme} 
+                  variant="primary" 
+                  colorMode={colorMode} 
+                  className="w-full"
+                  onClick={() => setCurrentView('plans')}
+                >
+                  View Creator Plans
+                </Button>
+              </Card>
+              
+              <Card theme={theme} colorMode={colorMode} className="p-8 hover:shadow-lg transition-shadow">
+                <div className="flex items-center mb-4">
+                  <Building className={`h-10 w-10 ${THEMES.gigs.icon} mr-4`} />
+                  <h3 className="text-2xl font-bold text-gray-800 dark:text-white">Studios & Businesses</h3>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">
+                  Comprehensive solutions for studios, agencies, and creative businesses of all sizes.
+                </p>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-start">
+                    <Star className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-600 dark:text-gray-300">Team collaboration features</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Star className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-600 dark:text-gray-300">Advanced project management</span>
+                  </li>
+                  <li className="flex items-start">
+                    <Star className="h-5 w-5 text-yellow-500 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-600 dark:text-gray-300">Enterprise-grade security</span>
+                  </li>
+                </ul>
+                <p className="text-xl font-bold text-gray-800 dark:text-white mb-6">
+                  Starting at $299/year
+                </p>
+                <Button 
+                  theme={theme} 
+                  variant="primary" 
+                  colorMode={colorMode} 
+                  className="w-full"
+                  onClick={() => setCurrentView('plans')}
+                >
+                  View Business Plans
+                </Button>
+              </Card>
             </div>
           </div>
         </section>
@@ -407,7 +501,7 @@ function LandingPage() {
       </>
     );
   };
-  
+
   // How It Works page content
   const renderHowItWorksPage = () => {
     return (
@@ -465,7 +559,7 @@ function LandingPage() {
               
               <Card theme={theme} colorMode={colorMode} className="p-6">
                 <div className="flex items-start">
-                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${THEMES.gigs.buttonPrimary} mr-4 flex-shrink-0`}>
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${THEMES.gigs.buttonPrimary } mr-4 flex-shrink-0`}>
                     <span className="text-xl font-bold text-white">4</span>
                   </div>
                   <div>
@@ -485,4 +579,136 @@ function LandingPage() {
                   <div>
                     <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Get Paid Securely</h3>
                     <p className="text-gray-600 dark:text-gray-300">
-                      Receive payment through our secure payment system. For fixed-price projects, funds are held in escrow until work
+                      Receive payment through our secure payment system. For fixed-price projects, funds are held in escrow until work is completed and approved. For hourly projects, track your time and get paid for hours worked.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+          
+          <div className="mb-16">
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white mb-6">For Clients</h2>
+            
+            <div className="space-y-8">
+              <Card theme={theme} colorMode={colorMode} className="p-6">
+                <div className="flex items-start">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${THEMES.gigs.buttonSecondary} mr-4 flex-shrink-0`}>
+                    <span className="text-xl font-bold text-white">1</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Post a Gig</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Create a detailed gig posting that clearly describes your project requirements, budget, timeline, and the skills you're looking for. The more specific you are, the better matches you'll find.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card theme={theme} colorMode={colorMode} className="p-6">
+                <div className="flex items-start">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${THEMES.gigs.buttonSecondary} mr-4 flex-shrink-0`}>
+                    <span className="text-xl font-bold text-white">2</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Review Proposals</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Browse through proposals from interested freelancers. Review their profiles, portfolios, ratings, and previous work to find the best match for your project.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card theme={theme} colorMode={colorMode} className="p-6">
+                <div className="flex items-start">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${THEMES.gigs.buttonSecondary} mr-4 flex-shrink-0`}>
+                    <span className="text-xl font-bold text-white">3</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Hire and Collaborate</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Select the freelancer that best fits your needs and hire them through our platform. Use our collaboration tools to communicate, share files, and track progress throughout the project.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card theme={theme} colorMode={colorMode} className="p-6">
+                <div className="flex items-start">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${THEMES.gigs.buttonSecondary} mr-4 flex-shrink-0`}>
+                    <span className="text-xl font-bold text-white">4</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Review and Approve</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Review the completed work and request revisions if needed. Once you're satisfied, approve the work and release the payment to the freelancer.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card theme={theme} colorMode={colorMode} className="p-6">
+                <div className="flex items-start">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center ${THEMES.gigs.buttonSecondary} mr-4 flex-shrink-0`}>
+                    <span className="text-xl font-bold text-white">5</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Provide Feedback</h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Leave a review for the freelancer to help them build their reputation and to help other clients make informed decisions. Build long-term relationships with freelancers you like working with.
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+          
+          <div className="text-center">
+            <Button 
+              theme={theme} 
+              variant="primary" 
+              colorMode={colorMode} 
+              className="px-6"
+              onClick={() => setCurrentView('find-gigs')}
+            >
+              Start Exploring
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Header 
+        theme={theme}
+        colorMode={colorMode}
+        onColorModeChange={handleColorModeChange}
+        onLogin={handleLogin}
+        isLoggedIn={isLoggedIn}
+        userName={userName}
+        currentApp="gigs"
+        onNavigation={handleNavigation}
+      />
+      
+      <main className="flex-grow">
+        {renderContent()}
+      </main>
+      
+      <Footer theme={theme} colorMode={colorMode} />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <ThemeProvider initialTheme="gigs">
+        <LandingPage />
+      </ThemeProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;

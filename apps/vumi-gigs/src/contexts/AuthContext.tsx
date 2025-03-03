@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Auth } from 'aws-amplify';
-import { Hub } from 'aws-amplify/utils';
+import { signIn, signUp, confirmSignUp, signOut, getCurrentUser, fetchAuthSession, resetPassword, confirmResetPassword } from '@aws-amplify/auth';
+import { Hub } from '@aws-amplify/core';
 import { userApi } from '../services/workspaceApi';
 import { User } from '../models';
 
@@ -28,14 +28,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const listener = Hub.listen('auth', ({ payload: { event, data } }) => {
       switch (event) {
-        case 'signIn':
+        case 'signedIn':
           checkAuthState();
           break;
-        case 'signOut':
+        case 'signedOut':
           setIsAuthenticated(false);
           setUser(null);
           break;
-        case 'signIn_failure':
+        case 'signInFailed':
           console.error('Sign in failure', data);
           break;
       }
@@ -49,25 +49,26 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const checkAuthState = async () => {
     try {
       setIsLoading(true);
-      const cognitoUser = await Auth.currentAuthenticatedUser();
+      const authUser = await getCurrentUser();
+      const session = await fetchAuthSession();
       
-      if (cognitoUser) {
+      if (authUser && session.tokens) {
         setIsAuthenticated(true);
         
         // Fetch user data from API
         try {
-          const userData = await userApi.getProfile(cognitoUser.username);
+          const userData = await userApi.getProfile(authUser.userId);
           if (userData) {
             setUser(userData);
           }
         } catch (error) {
           console.error('Error fetching user profile:', error);
-          // Create a basic user object from Cognito data if API fetch fails
+          // Create a basic user object from auth data if API fetch fails
           setUser({
-            id: cognitoUser.username,
-            username: cognitoUser.username,
-            email: cognitoUser.attributes.email,
-            name: cognitoUser.attributes.name || cognitoUser.attributes.email.split('@')[0],
+            id: authUser.userId,
+            username: authUser.username,
+            email: authUser.signInDetails?.loginId || '',
+            name: authUser.username,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           });
@@ -81,9 +82,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const signIn = async (username: string, password: string) => {
+  const handleSignIn = async (username: string, password: string) => {
     try {
-      await Auth.signIn(username, password);
+      await signIn({ username, password });
       await checkAuthState();
     } catch (error) {
       console.error('Error signing in:', error);
@@ -91,14 +92,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const signUp = async (username: string, password: string, email: string, name: string) => {
+  const handleSignUp = async (username: string, password: string, email: string, name: string) => {
     try {
-      await Auth.signUp({
+      await signUp({
         username,
         password,
-        attributes: {
-          email,
-          name
+        options: {
+          userAttributes: {
+            email,
+            name
+          }
         }
       });
     } catch (error) {
@@ -107,18 +110,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const confirmSignUp = async (username: string, code: string) => {
+  const handleConfirmSignUp = async (username: string, code: string) => {
     try {
-      await Auth.confirmSignUp(username, code);
+      await confirmSignUp({ username, confirmationCode: code });
     } catch (error) {
       console.error('Error confirming sign up:', error);
       throw error;
     }
   };
 
-  const signOut = async () => {
+  const handleSignOut = async () => {
     try {
-      await Auth.signOut();
+      await signOut();
       setIsAuthenticated(false);
       setUser(null);
     } catch (error) {
@@ -127,18 +130,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const resetPassword = async (username: string) => {
+  const handleResetPassword = async (username: string) => {
     try {
-      await Auth.forgotPassword(username);
+      await resetPassword({ username });
     } catch (error) {
       console.error('Error resetting password:', error);
       throw error;
     }
   };
 
-  const confirmResetPassword = async (username: string, code: string, newPassword: string) => {
+  const handleConfirmResetPassword = async (username: string, code: string, newPassword: string) => {
     try {
-      await Auth.forgotPasswordSubmit(username, code, newPassword);
+      await confirmResetPassword({ username, confirmationCode: code, newPassword });
     } catch (error) {
       console.error('Error confirming password reset:', error);
       throw error;
@@ -149,12 +152,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     isAuthenticated,
     isLoading,
     user,
-    signIn,
-    signUp,
-    confirmSignUp,
-    signOut,
-    resetPassword,
-    confirmResetPassword
+    signIn: handleSignIn,
+    signUp: handleSignUp,
+    confirmSignUp: handleConfirmSignUp,
+    signOut: handleSignOut,
+    resetPassword: handleResetPassword,
+    confirmResetPassword: handleConfirmResetPassword
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
