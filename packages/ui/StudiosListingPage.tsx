@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect  } from 'react';
 import { Search, Filter, X, CheckSquare, Square, Building } from 'lucide-react';
 import { Studio, StudioFilter } from './types';
 import { Button, Card, StudioCard } from './index';
-import { ThemeType, ColorMode } from './index';
 import { sampleStudios } from './data/sampleData';
 
 // Industry categories

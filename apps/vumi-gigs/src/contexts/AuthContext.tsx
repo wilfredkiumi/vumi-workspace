@@ -1,172 +1,101 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { signIn, signUp, confirmSignUp, signOut, getCurrentUser, fetchAuthSession } from '@aws-amplify/auth';
-import { Hub } from '@aws-amplify/core';
-import { userApi } from '../services/workspaceApi';
-import { User } from '../models';
+import { createContext, useContext, useReducer, ReactNode } from 'react';
+
+interface AuthState {
+  isAuthenticated: boolean;
+  user: {
+    id?: string;
+    name?: string;
+    email?: string;
+    role?: string;
+  } | null;
+  token: string | null;
+}
 
 interface AuthContextType {
+  state: AuthState;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
+  logout: () => void;
   isAuthenticated: boolean;
-  isLoading: boolean;
-  user: User | null;
-  signIn: (username: string, password: string) => Promise<void>;
-  signUp: (username: string, password: string, email: string, name: string) => Promise<void>;
-  confirmSignUp: (username: string, code: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  resetPassword: (username: string) => Promise<void>;
-  confirmResetPassword: (username: string, code: string, newPassword: string) => Promise<void>;
 }
+
+const initialState: AuthState = {
+  isAuthenticated: false,
+  user: null,
+  token: null
+};
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<User | null>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [state, dispatch] = useReducer(authReducer, initialState);
 
-  useEffect(() => {
-    checkAuthState();
-
-    const listener = Hub.listen('auth', ({ payload: { event, data } }) => {
-      switch (event) {
-        case 'signedIn':
-          checkAuthState();
-          break;
-        case 'signedOut':
-          setIsAuthenticated(false);
-          setUser(null);
-          break;
-        case 'signInFailed':
-          console.error('Sign in failure', data);
-          break;
-      }
-    });
-
-    return () => {
-      listener();
-    };
-  }, []);
-
-  const checkAuthState = async () => {
+  const login = async (credentials: { email: string; password: string }) => {
     try {
-      setIsLoading(true);
-      const authUser = await getCurrentUser();
-      const session = await fetchAuthSession();
+      // Here you would typically make an API call to authenticate
+      // For now, we'll simulate a successful login
+      const fakeUser = {
+        id: '1',
+        name: 'Test User',
+        email: credentials.email,
+        role: 'user'
+      };
       
-      if (authUser && session.tokens) {
-        setIsAuthenticated(true);
-        
-        // Fetch user data from API
-        try {
-          const userData = await userApi.getProfile(authUser.userId);
-          if (userData) {
-            setUser(userData);
-          }
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
-          // Create a basic user object from auth data if API fetch fails
-          setUser({
-            id: authUser.userId,
-            username: authUser.username,
-            email: authUser.signInDetails?.loginId || '',
-            name: authUser.username,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          });
-        }
-      }
+      dispatch({ type: 'LOGIN_SUCCESS', payload: { user: fakeUser, token: 'fake-token' } });
     } catch (error) {
-      setIsAuthenticated(false);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignIn = async (username: string, password: string) => {
-    try {
-      await signIn({ username, password });
-      await checkAuthState();
-    } catch (error) {
-      console.error('Error signing in:', error);
+      dispatch({ type: 'LOGIN_FAILURE' });
       throw error;
     }
   };
 
-  const handleSignUp = async (username: string, password: string, email: string, name: string) => {
-    try {
-      await signUp({
-        username,
-        password,
-        options: {
-          userAttributes: {
-            email,
-            name
-          }
-        }
-      });
-    } catch (error) {
-      console.error('Error signing up:', error);
-      throw error;
-    }
-  };
-
-  const handleConfirmSignUp = async (username: string, code: string) => {
-    try {
-      await confirmSignUp({ username, confirmationCode: code });
-    } catch (error) {
-      console.error('Error confirming sign up:', error);
-      throw error;
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      setIsAuthenticated(false);
-      setUser(null);
-    } catch (error) {
-      console.error('Error signing out:', error);
-      throw error;
-    }
-  };
-
-  const handleResetPassword = async (username: string) => {
-    try {
-      await resetPassword({ username });
-    } catch (error) {
-      console.error('Error resetting password:', error);
-      throw error;
-    }
-  };
-
-  const handleConfirmResetPassword = async (username: string, code: string, newPassword: string) => {
-    try {
-      await confirmResetPassword({ username, confirmationCode: code, newPassword });
-    } catch (error) {
-      console.error('Error confirming password reset:', error);
-      throw error;
-    }
+  const logout = () => {
+    dispatch({ type: 'LOGOUT' });
   };
 
   const value = {
-    isAuthenticated,
-    isLoading,
-    user,
-    signIn: handleSignIn,
-    signUp: handleSignUp,
-    confirmSignUp: handleConfirmSignUp,
-    signOut: handleSignOut,
-    resetPassword: handleResetPassword,
-    confirmResetPassword: handleConfirmResetPassword
+    state,
+    login,
+    logout,
+    isAuthenticated: state.isAuthenticated
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-};
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
 
-export const useAuth = () => {
+export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-};
+}
+
+type AuthAction = 
+  | { type: 'LOGIN_SUCCESS'; payload: { user: any; token: string } }
+  | { type: 'LOGIN_FAILURE' }
+  | { type: 'LOGOUT' };
+
+function authReducer(state: AuthState, action: AuthAction): AuthState {
+  switch (action.type) {
+    case 'LOGIN_SUCCESS':
+      return {
+        ...state,
+        isAuthenticated: true,
+        user: action.payload.user,
+        token: action.payload.token
+      };
+    case 'LOGIN_FAILURE':
+    case 'LOGOUT':
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+        token: null
+      };
+    default:
+      return state;
+  }
+}

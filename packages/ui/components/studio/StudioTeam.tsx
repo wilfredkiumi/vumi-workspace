@@ -1,21 +1,19 @@
-import React from 'react';
 import { Studio } from '../../types';
 import { Card } from '../../index';
-import { ThemeType, ColorMode } from '../../index';
 
 interface StudioTeamProps {
+  colorMode?: string;
+  theme?: string;
   studio: Studio;
-  theme: ThemeType;
-  colorMode: ColorMode;
   onMemberClick?: (memberId: string) => void;
 }
 
-export function StudioTeam({
+export function StudioTeam({ 
+  
+  
   studio,
-  theme,
-  colorMode,
   onMemberClick
-}: StudioTeamProps) {
+, theme = "gigs", colorMode = "light" }: StudioTeamProps) {
   const handleMemberClick = (memberId: string) => {
     if (onMemberClick) {
       onMemberClick(memberId);

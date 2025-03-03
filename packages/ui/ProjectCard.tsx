@@ -1,5 +1,4 @@
-import React from 'react';
-import { Clock, Award, Eye, Heart, Users } from 'lucide-react';
+import { Clock, Eye, Heart, Users , Award} from 'lucide-react';
 import { Project } from './types';
 import { ThemeType, ColorMode } from './index';
 
@@ -12,9 +11,7 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ 
-  project, 
-  theme, 
-  colorMode,
+  project,
   onClick,
   compact = false
 }: ProjectCardProps) {

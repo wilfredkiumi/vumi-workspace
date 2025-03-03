@@ -1,5 +1,4 @@
-import React from 'react';
-import { FileCheck, Briefcase, Star, Award } from 'lucide-react';
+import {  FileCheck, Star , Briefcase, Award } from 'lucide-react';
 import { Button, Card, THEMES } from 'ui';
 
 interface CategoriesSectionProps {
@@ -8,7 +7,7 @@ interface CategoriesSectionProps {
   onBrowseGigs: () => void;
 }
 
-export function CategoriesSection({ theme, colorMode, onBrowseGigs }: CategoriesSectionProps) {
+export function CategoriesSection({ theme, onBrowseGigs }: CategoriesSectionProps) {
   return (
     <section className="py-16 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">

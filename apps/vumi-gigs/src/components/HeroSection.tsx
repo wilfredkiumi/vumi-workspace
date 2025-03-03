@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, THEMES } from 'ui';
 
 interface HeroSectionProps {
@@ -8,7 +7,7 @@ interface HeroSectionProps {
   onPostGig: () => void;
 }
 
-export function HeroSection({ theme, colorMode, onFindGigs, onPostGig }: HeroSectionProps) {
+export function HeroSection({ theme, onFindGigs, onPostGig }: HeroSectionProps) {
   return (
     <section className="relative pt-24 pb-16 min-h-[80vh] flex items-center">
       {/* Background Image with Overlay */}

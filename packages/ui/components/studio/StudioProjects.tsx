@@ -1,22 +1,20 @@
-import React from 'react';
 import { Studio } from '../../types';
 import { Card } from '../../index';
-import { ThemeType, ColorMode } from '../../index';
 import { Calendar } from 'lucide-react';
 
 interface StudioProjectsProps {
+  colorMode?: string;
+  theme?: string;
   studio: Studio;
-  theme: ThemeType;
-  colorMode: ColorMode;
   onProjectClick?: (projectId: string) => void;
 }
 
-export function StudioProjects({
+export function StudioProjects({ 
+  
+  
   studio,
-  theme,
-  colorMode,
   onProjectClick
-}: StudioProjectsProps) {
+, theme = "gigs", colorMode = "light" }: StudioProjectsProps) {
   const handleProjectClick = (projectId: string) => {
     if (onProjectClick) {
       onProjectClick(projectId);

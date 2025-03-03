@@ -1,6 +1,5 @@
-import React from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { AuthModal } from './auth/AuthModal';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -8,39 +7,11 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
   const { isAuthenticated } = useAuth();
-  const [showAuthModal, setShowAuthModal] = React.useState(!isAuthenticated);
-
-  const handleAuthSuccess = () => {
-    setShowAuthModal(false);
-  };
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return (
-      <>
-        {showAuthModal && (
-          <AuthModal
-            onClose={() => setShowAuthModal(false)}
-            onSuccess={handleAuthSuccess}
-          />
-        )}
-        <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center p-4">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Authentication Required
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Please sign in to access this feature.
-            </p>
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Sign In
-            </button>
-          </div>
-        </div>
-      </>
-    );
+    // Redirect to login page but save the attempted URL
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

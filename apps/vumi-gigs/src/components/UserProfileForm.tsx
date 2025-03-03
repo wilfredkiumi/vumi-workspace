@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
 import { User } from '../models';
 import { useUserProfile } from '../hooks/useUserProfile';
@@ -11,7 +11,7 @@ interface UserProfileFormProps {
 }
 
 export function UserProfileForm({ userId, onSuccess, onCancel }: UserProfileFormProps) {
-  const { theme, colorMode } = useTheme();
+  const { theme } = useTheme();
   const { profile, loading, error, updateProfile } = useUserProfile(userId);
   
   const [formData, setFormData] = useState<Partial<User>>(profile || {

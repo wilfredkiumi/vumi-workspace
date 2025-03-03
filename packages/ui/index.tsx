@@ -1,8 +1,8 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import { useState, useEffect, createContext, useContext  } from 'react';
 
 // Import and re-export the theme constants and types
 import { THEMES } from './theme';
-import { CHART_COLORS } from './theme';
+// // // // import { CHART_COLORS } from './theme';
 export { THEMES, CHART_COLORS } from './theme';
 export { CreatorCard } from './CreatorCard';
 export { CreatorProfile } from './CreatorProfile';
@@ -30,8 +30,7 @@ const ThemeContext = createContext<ThemeContextType>({
   theme: 'gigs',
   colorMode: 'light',
   setTheme: () => {},
-  setColorMode: () => {},
-});
+  setColorMode: () => {} });
 
 export interface ThemeProviderProps {
   children: React.ReactNode;
@@ -42,8 +41,7 @@ export interface ThemeProviderProps {
 export function ThemeProvider({
   children,
   initialTheme = 'gigs',
-  initialColorMode = 'light',
-}: ThemeProviderProps) {
+  initialColorMode = 'light' }: ThemeProviderProps) {
   const [theme, setTheme] = useState<ThemeType>(initialTheme);
   const [colorMode, setColorMode] = useState<ColorMode>(initialColorMode);
   
@@ -83,8 +81,8 @@ export function Button({
   className = '', 
   onClick, 
   variant = 'primary',
-  theme = 'gigs',
-  colorMode = 'light',
+  theme = "gigs", /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  colorMode = "light", /* eslint-disable-line @typescript-eslint/no-unused-vars */
   type = 'button',
   disabled = false
 }: ButtonProps) {
@@ -119,8 +117,8 @@ export interface CardProps {
 export function Card({ 
   children, 
   className = '', 
-  theme = 'gigs',
-  colorMode = 'light',
+  theme = "gigs", /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  colorMode = "light", /* eslint-disable-line @typescript-eslint/no-unused-vars */
   onClick
 }: CardProps) {
   const baseClasses = 'rounded-xl shadow-md p-6';
@@ -145,7 +143,7 @@ export interface FooterProps {
 }
 
 export function Footer({
-  theme = 'gigs',
+  theme = "gigs", /* eslint-disable-line @typescript-eslint/no-unused-vars */
   colorMode = 'light'
 }: FooterProps) {
   const { colorMode: contextColorMode } = useTheme();
@@ -253,8 +251,8 @@ export interface HeaderProps {
 }
 
 export function Header({ 
-  theme = 'gigs',
-  colorMode = 'light',
+  theme = "gigs", /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  colorMode = "light", /* eslint-disable-line @typescript-eslint/no-unused-vars */
   onColorModeChange,
   onLogin,
   isLoggedIn = false,

@@ -1,19 +1,17 @@
-import React from 'react';
 import { Studio } from '../../types';
 import { Card } from '../../index';
-import { ThemeType, ColorMode } from '../../index';
 
 interface StudioServicesProps {
+  colorMode?: string;
+  theme?: string;
   studio: Studio;
-  theme: ThemeType;
-  colorMode: ColorMode;
 }
 
-export function StudioServices({
-  studio,
-  theme,
-  colorMode
-}: StudioServicesProps) {
+export function StudioServices({ 
+  
+  
+  studio
+, theme = "gigs", colorMode = "light" }: StudioServicesProps) {
   return (
     <Card theme={theme} colorMode={colorMode}>
       <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Services</h2>

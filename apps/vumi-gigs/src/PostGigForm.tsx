@@ -1,170 +1,54 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button, Card, useTheme } from 'ui';
-import { X, Plus, Info, DollarSign, Clock, MapPin, Tag, FileText, Upload } from 'lucide-react';
-
-// Categories for selection
-const gigCategories = [
-  "Game Development",
-  "Animation",
-  "Video Production",
-  "3D Modeling",
-  "Concept Art",
-  "UI/UX Design",
-  "Sound Design",
-  "VR/AR Development",
-  "Motion Graphics",
-  "Visual Effects"
-];
-
-// Subcategories mapped to parent categories
-const gigSubcategories: Record<string, string[]> = {
-  "Game Development": [
-    "Unity Development",
-    "Unreal Development",
-    "Mobile Game Development",
-    "Game Design",
-    "Level Design",
-    "Character Design",
-    "UI/UX Design",
-    "Game Testing",
-    "Game Writing"
-  ],
-  "Animation": [
-    "2D Animation",
-    "3D Animation",
-    "Character Animation",
-    "Motion Graphics",
-    "Storyboarding",
-    "Rigging",
-    "Stop Motion"
-  ],
-  "Video Production": [
-    "Video Editing",
-    "Cinematography",
-    "Color Grading",
-    "Visual Effects",
-    "Motion Graphics",
-    "Sound Design",
-    "Scriptwriting"
-  ],
-  "3D Modeling": [
-    "Character Modeling",
-    "Environment Modeling",
-    "Product Modeling",
-    "Architectural Visualization",
-    "Texturing",
-    "Rigging",
-    "3D Printing Design"
-  ],
-  "Concept Art": [
-    "Character Design",
-    "Environment Design",
-    "Prop Design",
-    "Vehicle Design",
-    "Creature Design",
-    "Key Art",
-    "Storyboarding"
-  ],
-  "UI/UX Design": [
-    "Game UI Design",
-    "Mobile App Design",
-    "Web Design",
-    "Wireframing",
-    "Prototyping",
-    "User Testing",
-    "Icon Design"
-  ],
-  "Sound Design": [
-    "Game Audio",
-    "Music Composition",
-    "Voice Acting",
-    "Sound Effects",
-    "Audio Implementation",
-    "Audio Mixing",
-    "Foley"
-  ],
-  "VR/AR Development": [
-    "VR Game Development",
-    "AR App Development",
-    "360 Video",
-    "VR/AR UI Design",
-    "VR/AR Interaction Design",
-    "VR/AR Testing"
-  ],
-  "Motion Graphics": [
-    "Logo Animation",
-    "Explainer Videos",
-    "Title Sequences",
-    "Broadcast Graphics",
-    "Infographics",
-    "Social Media Animation"
-  ],
-  "Visual Effects": [
-    "Compositing",
-    "Particle Effects",
-    "Matte Painting",
-    "3D Integration",
-    "Rotoscoping",
-    "Match Moving"
-  ]
-};
-
-// Common skills for selection
-const commonSkills = [
-  "3D Modeling",
-  "Character Design",
-  "Animation",
-  "Unity",
-  "Unreal Engine",
-  "Blender",
-  "Maya",
-  "ZBrush",
-  "Adobe Creative Suite",
-  "After Effects",
-  "Premiere Pro",
-  "Concept Art",
-  "Storyboarding",
-  "Rigging",
-  "Texturing",
-  "UI Design",
-  "UX Design",
-  "Sound Design",
-  "Motion Capture",
-  "C#",
-  "C++",
-  "Python",
-  "JavaScript",
-  "VR Development",
-  "AR Development",
-  "Mobile Development"
-];
+import { 
+  X, 
+  Plus, 
+  Info, 
+  MapPin, 
+  Tag, 
+  FileText, 
+  Upload,
+  Clock,
+  Square,
+  CheckSquare
+} from 'lucide-react';
+import { Gig, Location, Budget } from './models/Gig';
+import { gigCategories, commonSkills } from './data/sampleGigs';
 
 interface PostGigFormProps {
-  onSubmit?: (formData: any) => void;
+  onSubmit?: (gig: Omit<Gig, 'id' | 'postedBy' | 'postedDate' | 'applicants' | 'status'>) => void;
   onCancel?: () => void;
 }
 
 function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
-  const { theme, colorMode } = useTheme();
+  const navigate = useNavigate();
+  const { theme, colorMode } = useTheme(); // Add colorMode from useTheme
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     category: '',
     subcategory: '',
-    budgetType: 'fixed',
-    budgetMin: '',
-    budgetMax: '',
+    budget: {
+      min: 0,
+      max: 0,
+      type: 'fixed' as Budget['type']
+    },
     duration: '',
-    skills: [] as string[],
-    locationType: 'remote',
-    city: '',
-    country: '',
     deadline: '',
+    skills: [] as string[],
+    location: {
+      type: 'remote' as Location['type'],
+      city: '',
+      country: ''
+    },
     attachments: [] as File[]
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [skillInput, setSkillInput] = useState('');
   const [showSkillSuggestions, setShowSkillSuggestions] = useState(false);
+  const [customCategory, setCustomCategory] = useState('');
+  const [showCustomCategoryInput, setShowCustomCategoryInput] = useState(false);
   
   // Filter subcategories based on selected category
   const availableSubcategories = formData.category ? gigSubcategories[formData.category] || [] : [];
@@ -264,27 +148,13 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
       newErrors.category = 'Category is required';
     }
     
-    if (!formData.budgetMin) {
-      newErrors.budgetMin = 'Minimum budget is required';
-    } else if (isNaN(Number(formData.budgetMin)) || Number(formData.budgetMin) < 0) {
-      newErrors.budgetMin = 'Please enter a valid amount';
-    }
-    
-    if (!formData.budgetMax) {
-      newErrors.budgetMax = 'Maximum budget is required';
-    } else if (isNaN(Number(formData.budgetMax)) || Number(formData.budgetMax) < 0) {
-      newErrors.budgetMax = 'Please enter a valid amount';
-    } else if (Number(formData.budgetMax) < Number(formData.budgetMin)) {
-      newErrors.budgetMax = 'Maximum budget must be greater than minimum budget';
-    }
-    
     if (formData.skills.length === 0) {
       newErrors.skills = 'At least one skill is required';
     }
     
-    if (formData.locationType !== 'remote' && (!formData.city || !formData.country)) {
-      if (!formData.city) newErrors.city = 'City is required for on-site or hybrid work';
-      if (!formData.country) newErrors.country = 'Country is required for on-site or hybrid work';
+    if (formData.location.type !== 'remote' && (!formData.location.city || !formData.location.country)) {
+      if (!formData.location.city) newErrors.city = 'City is required for on-site or hybrid work';
+      if (!formData.location.country) newErrors.country = 'Country is required for on-site or hybrid work';
     }
     
     setErrors(newErrors);
@@ -293,10 +163,20 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
     if (validateForm()) {
       if (onSubmit) {
-        onSubmit(formData);
+        onSubmit({
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          subcategory: formData.subcategory,
+          budget: formData.budget,
+          duration: formData.duration,
+          deadline: formData.deadline,
+          skills: formData.skills,
+          location: formData.location,
+          featured: false
+        });
       }
       
       // For demo purposes, show an alert
@@ -308,17 +188,50 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
         description: '',
         category: '',
         subcategory: '',
-        budgetType: 'fixed',
-        budgetMin: '',
-        budgetMax: '',
+        budget: {
+          min: 0,
+          max: 0,
+          type: 'fixed' as Budget['type']
+        },
         duration: '',
-        skills: [],
-        locationType: 'remote',
-        city: '',
-        country: '',
         deadline: '',
+        skills: [],
+        location: {
+          type: 'remote' as Location['type'],
+          city: '',
+          country: ''
+        },
         attachments: []
       });
+    }
+  };
+
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === 'other') {
+      setShowCustomCategoryInput(true);
+      setFormData(prev => ({
+        ...prev,
+        category: '',
+        subcategory: ''
+      }));
+    } else {
+      setShowCustomCategoryInput(false);
+      setFormData(prev => ({
+        ...prev,
+        category: value,
+        subcategory: ''
+      }));
+    }
+  };
+
+  const handleCustomCategorySubmit = () => {
+    if (customCategory.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        category: customCategory.trim()
+      }));
+      setShowCustomCategoryInput(false);
     }
   };
   
@@ -375,18 +288,53 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
                   <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Category *
                   </label>
-                  <select
-                    id="category"
-                    name="category"
-                    value={formData.category}
-                    onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border ${errors.category ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
-                  >
-                    <option value="">Select a category</option>
-                    {gigCategories.map(category => (
-                      <option key={category} value={category}>{category}</option>
-                    ))}
-                  </select>
+                  {showCustomCategoryInput ? (
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={customCategory}
+                        onChange={(e) => setCustomCategory(e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                        placeholder="Enter custom category"
+                      />
+                      <Button
+                        theme={theme}
+                        variant="secondary"
+                        colorMode={colorMode}
+                        onClick={handleCustomCategorySubmit}
+                        disabled={!customCategory.trim()}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                  ) : (
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category || ''}
+                      onChange={handleCategoryChange}
+                      className={`w-full px-3 py-2 border ${
+                        errors.category ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+                      } rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
+                    >
+                      <option value="" className="text-gray-600 dark:text-gray-400">Select a category</option>
+                      {gigCategories.map(category => (
+                        <option 
+                          key={category} 
+                          value={category}
+                          className="text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+                        >
+                          {category}
+                        </option>
+                      ))}
+                      <option 
+                        value="other"
+                        className="text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+                      >
+                        Other...
+                      </option>
+                    </select>
+                  )}
                   {errors.category && <p className="mt-1 text-sm text-red-500">{errors.category}</p>}
                 </div>
                 
@@ -400,102 +348,34 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
                     value={formData.subcategory}
                     onChange={handleInputChange}
                     disabled={!formData.category}
-                    className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${!formData.category ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white ${
+                      !formData.category ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                   >
-                    <option value="">Select a subcategory</option>
+                    <option value="" className="text-gray-600 dark:text-gray-400">Select a subcategory</option>
                     {availableSubcategories.map(subcategory => (
-                      <option key={subcategory} value={subcategory}>{subcategory}</option>
+                      <option 
+                        key={subcategory} 
+                        value={subcategory}
+                        className="text-gray-900 dark:text-white bg-white dark:bg-gray-800"
+                      >
+                        {subcategory}
+                      </option>
                     ))}
                   </select>
                 </div>
               </div>
             </div>
             
-            {/* Budget and Timeline */}
+            {/* Timeline */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Budget and Timeline</h2>
-              
-              {/* Budget Type */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Budget Type
-                </label>
-                <div className="flex space-x-4">
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="budgetType"
-                      value="fixed"
-                      checked={formData.budgetType === 'fixed'}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="ml-2 text-gray-700 dark:text-gray-300">Fixed Price</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="budgetType"
-                      value="hourly"
-                      checked={formData.budgetType === 'hourly'}
-                      onChange={handleInputChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                    />
-                    <span className="ml-2 text-gray-700 dark:text-gray-300">Hourly Rate</span>
-                  </label>
-                </div>
-              </div>
-              
-              {/* Budget Range */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                  <label htmlFor="budgetMin" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Minimum Budget *
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <DollarSign className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      id="budgetMin"
-                      name="budgetMin"
-                      value={formData.budgetMin}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-3 py-2 border ${errors.budgetMin ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
-                      placeholder={formData.budgetType === 'fixed' ? "e.g., 1000" : "e.g., 25"}
-                    />
-                  </div>
-                  {errors.budgetMin && <p className="mt-1 text-sm text-red-500">{errors.budgetMin}</p>}
-                </div>
-                
-                <div>
-                  <label htmlFor="budgetMax" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Maximum Budget *
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <DollarSign className="h-5 w-5 text-gray-400" />
-                    </div>
-                    <input
-                      type="text"
-                      id="budgetMax"
-                      name="budgetMax"
-                      value={formData.budgetMax}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-3 py-2 border ${errors.budgetMax ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
-                      placeholder={formData.budgetType === 'fixed' ? "e.g., 3000" : "e.g., 50"}
-                    />
-                  </div>
-                  {errors.budgetMax && <p className="mt-1 text-sm text-red-500">{errors.budgetMax}</p>}
-                </div>
-              </div>
+              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Timeline</h2>
               
               {/* Duration and Deadline */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label htmlFor="duration" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Duration
+                    Estimated Duration
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -616,7 +496,7 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
                       type="radio"
                       name="locationType"
                       value="remote"
-                      checked={formData.locationType === 'remote'}
+                      checked={formData.location.type === 'remote'}
                       onChange={handleInputChange}
                       className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
@@ -627,7 +507,7 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
                       type="radio"
                       name="locationType"
                       value="onsite"
-                      checked={formData.locationType === 'onsite'}
+                      checked={formData.location.type === 'onsite'}
                       onChange={handleInputChange}
                       className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
@@ -638,7 +518,7 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
                       type="radio"
                       name="locationType"
                       value="hybrid"
-                      checked={formData.locationType === 'hybrid'}
+                      checked={formData.location.type === 'hybrid'}
                       onChange={handleInputChange}
                       className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                     />
@@ -648,7 +528,7 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
               </div>
               
               {/* City and Country (for on-site or hybrid) */}
-              {formData.locationType !== 'remote' && (
+              {formData.location.type !== 'remote' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label htmlFor="city" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -662,7 +542,7 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
                         type="text"
                         id="city"
                         name="city"
-                        value={formData.city}
+                        value={formData.location.city}
                         onChange={handleInputChange}
                         className={`w-full pl-10 pr-3 py-2 border ${errors.city ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
                         placeholder="e.g., San Francisco"
@@ -679,7 +559,7 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
                       type="text"
                       id="country"
                       name="country"
-                      value={formData.country}
+                      value={formData.location.country}
                       onChange={handleInputChange}
                       className={`w-full px-3 py-2 border ${errors.country ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white`}
                       placeholder="e.g., USA"
@@ -782,10 +662,10 @@ function PostGigForm({ onSubmit, onCancel }: PostGigFormProps) {
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">Tips for a Great Gig Posting</h3>
               <ul className="space-y-2 text-gray-600 dark:text-gray-300">
                 <li>Be specific about your requirements and deliverables</li>
-                <li>Provide a clear and realistic budget range</li>
                 <li>Include all necessary skills and qualifications</li>
                 <li>Set a reasonable timeline for the project</li>
                 <li>Attach reference materials or examples if available</li>
+                <li>Be open to different budget proposals from creators</li>
               </ul>
             </div>
           </div>

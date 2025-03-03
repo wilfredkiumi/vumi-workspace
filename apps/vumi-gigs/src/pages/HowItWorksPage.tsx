@@ -1,20 +1,15 @@
-import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Card, THEMES } from 'ui';
-import { 
+import {  
   Search, 
   Send, 
-  Video, 
-  DollarSign, 
   CheckSquare, 
   Star, 
-  Shield, 
-  Clock,
+  Shield,
   FileText,
   MessageSquare,
-  Users,
-  Award
-} from 'lucide-react';
+  Users
+, Clock, DollarSign, Video } from 'lucide-react';
 
 function HowItWorksPage() {
   const { dispatch } = useApp();

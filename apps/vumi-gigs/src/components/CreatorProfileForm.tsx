@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
 import { Creator } from '../models';
 import { useCreator } from '../hooks/useCreator';
-import { MapPin, Link, Camera, X } from 'lucide-react';
+import { MapPin, Link, X } from 'lucide-react';
 
 interface CreatorProfileFormProps {
   creatorId?: string;
@@ -11,7 +11,7 @@ interface CreatorProfileFormProps {
 }
 
 export function CreatorProfileForm({ creatorId, onSuccess, onCancel }: CreatorProfileFormProps) {
-  const { theme, colorMode } = useTheme();
+  const { theme } = useTheme();
   const { creator, loading, error, updateCreator } = useCreator(creatorId);
   
   const [formData, setFormData] = useState<Partial<Creator>>(creator || {

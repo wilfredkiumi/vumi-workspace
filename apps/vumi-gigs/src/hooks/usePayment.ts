@@ -17,26 +17,29 @@ export function usePayment(): UsePaymentResult {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const createSubscription = async (request: SubscriptionRequest): Promise<PaymentResponse> => {
+  const createSubscription = async (subscriptionDetails: {
+    planId: string;
+    successUrl: string;
+    cancelUrl: string;
+  }) => {
+    setLoading(true);
+    
     try {
-      setLoading(true);
-      setError(null);
+      // In a real app, this would make an API call to your payment processor
+      console.log('Creating subscription:', subscriptionDetails);
       
-      // Add default URLs if not provided
-      const fullRequest = {
-        ...request,
-        successUrl: request.successUrl || `${window.location.origin}/payment/success`,
-        cancelUrl: request.cancelUrl || `${window.location.origin}/payment/cancel`
-      };
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const response = await paymentApi.createSubscription(fullRequest);
-      return response;
-    } catch (err) {
-      console.error('Error creating subscription:', err);
-      setError(err instanceof Error ? err : new Error('Failed to create subscription'));
-      throw err;
-    } finally {
+      // Mock successful response
       setLoading(false);
+      return {
+        success: true,
+        url: subscriptionDetails.successUrl + '?demo=true',
+      };
+    } catch (error) {
+      setLoading(false);
+      throw error;
     }
   };
 

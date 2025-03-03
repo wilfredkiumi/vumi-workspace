@@ -1,15 +1,41 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
-import { AppState, AppAction, AppContext as IAppContext } from '../types';
+import { createContext, useContext, useReducer, ReactNode } from 'react';
 
+// Define the state type
+interface AppState {
+  isLoggedIn: boolean;
+  userName: string | null;
+  currentView: string;
+  selectedCreatorId: string | null;
+  selectedGigId: string | null;
+  selectedStudioId: string | null;
+}
+
+// Define action types
+type AppAction =
+  | { type: 'LOGIN'; payload: { userName: string } }
+  | { type: 'LOGOUT' }
+  | { type: 'SET_VIEW'; payload: string }
+  | { type: 'SELECT_CREATOR'; payload: string | null }
+  | { type: 'SELECT_GIG'; payload: string | null }
+  | { type: 'SELECT_STUDIO'; payload: string | null };
+
+// Initial state
 const initialState: AppState = {
   isLoggedIn: false,
-  userName: '',
+  userName: null,
   currentView: 'home',
   selectedCreatorId: null,
   selectedGigId: null,
   selectedStudioId: null
 };
 
+// Create context
+const AppContext = createContext<{
+  state: AppState;
+  dispatch: React.Dispatch<AppAction>;
+} | undefined>(undefined);
+
+// Reducer function
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
     case 'LOGIN':
@@ -22,7 +48,7 @@ function appReducer(state: AppState, action: AppAction): AppState {
       return {
         ...state,
         isLoggedIn: false,
-        userName: ''
+        userName: null
       };
     case 'SET_VIEW':
       return {
@@ -49,11 +75,10 @@ function appReducer(state: AppState, action: AppAction): AppState {
   }
 }
 
-const AppContext = createContext<IAppContext | undefined>(undefined);
-
+// Provider component
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
-
+  
   return (
     <AppContext.Provider value={{ state, dispatch }}>
       {children}
@@ -61,6 +86,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Hook for using the app context
 export function useApp() {
   const context = useContext(AppContext);
   if (context === undefined) {

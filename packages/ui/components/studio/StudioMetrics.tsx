@@ -1,20 +1,18 @@
-import React from 'react';
 import { Star, Film, MessageSquare } from 'lucide-react';
 import { Studio } from '../../types';
 import { Card } from '../../index';
-import { ThemeType, ColorMode } from '../../index';
 
 interface StudioMetricsProps {
+  colorMode?: string;
+  theme?: string;
   studio: Studio;
-  theme: ThemeType;
-  colorMode: ColorMode;
 }
 
-export function StudioMetrics({
-  studio,
-  theme,
-  colorMode
-}: StudioMetricsProps) {
+export function StudioMetrics({ 
+  
+  
+  studio
+, theme = "gigs", colorMode = "light" }: StudioMetricsProps) {
   return (
     <Card theme={theme} colorMode={colorMode}>
       <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Studio Metrics</h2>

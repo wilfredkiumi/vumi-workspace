@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { Button } from 'ui';
 import { usePayment } from '../hooks/usePayment';
 import { useAuth } from '../contexts/AuthContext';

@@ -1,5 +1,4 @@
-import React from 'react';
-import { MapPin, Star, Check, Award, Users, Camera, Video, Lock } from 'lucide-react';
+import { MapPin, Star, Check, Users , Award} from 'lucide-react';
 import { Creator, ProfileMode } from './types';
 import { ThemeType, ColorMode } from './index';
 
@@ -11,9 +10,7 @@ interface CreatorCardProps {
 }
 
 export function CreatorCard({ 
-  creator, 
-  theme, 
-  colorMode,
+  creator,
   onClick
 }: CreatorCardProps) {
   const handleClick = () => {
@@ -160,23 +157,23 @@ export function CreatorCard({
         )}
         
         {/* Creator Type Specific Info */}
-        {creator.creatorType === 'influencer' && creator.audienceSize && (
+        {creator.creatorType === 'influencer' && (creator as any).audienceSize && (
           <div className="mt-3 flex items-center text-sm text-gray-600 dark:text-gray-400">
             <Users className="h-4 w-4 mr-1" />
             <span>
-              {creator.audienceSize > 1000000 
-                ? `${(creator.audienceSize / 1000000).toFixed(1)}M followers` 
-                : creator.audienceSize > 1000 
-                  ? `${(creator.audienceSize / 1000).toFixed(1)}K followers` 
-                  : `${creator.audienceSize} followers`}
+              {(creator as any).audienceSize > 1000000 
+                ? `${((creator as any).audienceSize / 1000000).toFixed(1)}M followers` 
+                : (creator as any).audienceSize > 1000 
+                  ? `${((creator as any).audienceSize / 1000).toFixed(1)}K followers` 
+                  : `${(creator as any).audienceSize} followers`}
             </span>
           </div>
         )}
         
-        {creator.creatorType === 'crew' && creator.teamSize && (
+        {creator.creatorType === 'crew' && (creator as any).teamSize && (
           <div className="mt-3 flex items-center text-sm text-gray-600 dark:text-gray-400">
             <Users className="h-4 w-4 mr-1" />
-            <span>{creator.teamSize} {creator.teamSize === 1 ? 'person' : 'people'} team</span>
+            <span>{(creator as any).teamSize} {(creator as any).teamSize === 1 ? 'person' : 'people'} team</span>
           </div>
         )}
         

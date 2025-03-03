@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, useTheme } from 'ui';
-import { 
+import {  
   Clock, 
-  DollarSign, 
   MapPin, 
   Calendar, 
   Tag, 
@@ -15,47 +15,19 @@ import {
   ExternalLink,
   MessageSquare,
   CheckCircle,
-  Star
+  Star,
+  DollarSign 
 } from 'lucide-react';
-import { Gig } from './GigCard';
-
-// Sample gig data
-const sampleGig: Gig = {
-  id: "g1",
-  title: "3D Character Modeling for Indie Game",
-  description: "We're looking for a talented 3D artist to create 5 character models for our upcoming indie game. The characters should be low-poly and match our existing art style.\n\nThe game is a fantasy RPG with a stylized aesthetic, and we need character models for the following:\n- Main hero character (human)\n- Companion character (elf)\n- Merchant NPC\n- Two enemy types\n\nAll characters should be rigged for animation and include basic texture maps. We'll provide concept art and reference materials for each character.\n\nExperience with Blender and Unity is required. Please include examples of your previous character modeling work in your application.",
-  category: "Game Development",
-  subcategory: "3D Modeling",
-  budget: {
-    min: 1500,
-    max: 3000,
-    type: 'fixed'
-  },
-  duration: "2-4 weeks",
-  skills: ["3D Modeling", "Character Design", "Blender", "Unity", "Low-Poly", "Texturing", "Rigging"],
-  location: {
-    type: 'remote'
-  },
-  postedBy: {
-    id: "u1",
-    name: "GameStudio XYZ",
-    avatar: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    rating: 4.8,
-    verified: true
-  },
-  postedDate: "2023-06-15",
-  deadline: "2023-07-15",
-  applicants: 12,
-  status: 'open',
-  featured: true
-};
+import { Gig } from './models/Gig';
+import { sampleGigs } from './data/sampleGigs';
 
 interface GigDetailPageProps {
-  gigId: string;
   onBack?: () => void;
 }
 
-function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
+function GigDetailPage({ onBack }: GigDetailPageProps) {
+  const { gigId } = useParams();
+  const navigate = useNavigate();
   const { theme, colorMode } = useTheme();
   const [gig, setGig] = useState<Gig | null>(null);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -67,9 +39,8 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
   });
   
   useEffect(() => {
-    // In a real app, this would be an API call to fetch the gig by ID
-    // For demo purposes, we're using the sample gig
-    setGig(sampleGig);
+    const foundGig = sampleGigs.find(g => g.id === gigId);
+    setGig(foundGig || null);
   }, [gigId]);
   
   const handleBookmark = () => {
@@ -77,12 +48,10 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
   };
   
   const handleShare = () => {
-    // In a real app, this would open a share dialog
     alert('Share functionality would be implemented here');
   };
   
   const handleReport = () => {
-    // In a real app, this would open a report dialog
     alert('Report functionality would be implemented here');
   };
   
@@ -101,7 +70,6 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
   
   const handleSubmitApplication = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would submit the application to the backend
     alert('Your application has been submitted!');
     setShowApplyForm(false);
     setApplicationData({
@@ -158,6 +126,14 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
     }
   };
   
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate('/gigs');
+    }
+  };
+
   if (!gig) {
     return (
       <div className="container mx-auto px-4 py-24">
@@ -180,18 +156,14 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
   return (
     <div className="container mx-auto px-4 py-24">
       <div className="max-w-4xl mx-auto">
-        {/* Back Button */}
-        {onBack && (
-          <button 
-            onClick={onBack}
-            className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6"
-          >
-            <ChevronLeft className="h-5 w-5 mr-1" />
-            Back to Gigs
-          </button>
-        )}
+        <button 
+          onClick={handleBack}
+          className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6"
+        >
+          <ChevronLeft className="h-5 w-5 mr-1" />
+          Back to Gigs
+        </button>
         
-        {/* Gig Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
@@ -239,9 +211,7 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
           </div>
         </div>
         
-        {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Gig Details */}
           <div className="lg:col-span-2">
             <Card theme={theme} colorMode={colorMode} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Description</h2>
@@ -272,12 +242,10 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
               </div>
             </Card>
             
-            {/* Apply Form */}
             {showApplyForm ? (
               <Card theme={theme} colorMode={colorMode} className="mb-8">
                 <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Apply for this Gig</h2>
                 <form onSubmit={handleSubmitApplication}>
-                  {/* Cover Letter */}
                   <div className="mb-4">
                     <label htmlFor="coverLetter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Cover Letter
@@ -294,7 +262,6 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
                     />
                   </div>
                   
-                  {/* Rate/Bid */}
                   <div className="mb-4">
                     <label htmlFor="rate" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Your {gig.budget.type === 'fixed' ? 'Bid' : 'Hourly Rate'} ($)
@@ -316,7 +283,6 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
                     </div>
                   </div>
                   
-                  {/* Attachments */}
                   <div className="mb-6">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       Attachments (Portfolio, Resume, etc.)
@@ -349,7 +315,6 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
                       </div>
                     </div>
                     
-                    {/* File list */}
                     {applicationData.attachments.length > 0 && (
                       <div className="mt-2 space-y-2">
                         {applicationData.attachments.map((file, index) => (
@@ -366,7 +331,7 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
                               onClick={() => handleRemoveFile(file)}
                               className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                             >
-                              <X className="h-5 w-5" />
+                              <span className="h-5 w-5">&times;</span>
                             </button>
                           </div>
                         ))}
@@ -374,7 +339,6 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
                     )}
                   </div>
                   
-                  {/* Form Actions */}
                   <div className="flex justify-end space-x-4">
                     <Button
                       theme={theme}
@@ -409,7 +373,6 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
               </div>
             )}
             
-            {/* Report Button */}
             <div className="flex justify-center mb-8">
               <button
                 onClick={handleReport}
@@ -421,25 +384,11 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
             </div>
           </div>
           
-          {/* Right Column - Sidebar */}
           <div>
-            {/* Gig Details Card */}
             <Card theme={theme} colorMode={colorMode} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Gig Details</h2>
               
               <div className="space-y-4">
-                <div className="flex items-start">
-                  <DollarSign className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">Budget</h3>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {gig.budget.type === 'fixed' 
-                        ? `$${gig.budget.min.toLocaleString()} - $${gig.budget.max.toLocaleString()}` 
-                        : `$${gig.budget.min} - $${gig.budget.max}/hr`}
-                    </p>
-                  </div>
-                </div>
-                
                 <div className="flex items-start">
                   <MapPin className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-3 flex-shrink-0 mt-0.5" />
                   <div>
@@ -470,7 +419,6 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
               </div>
             </Card>
             
-            {/* Client Card */}
             <Card theme={theme} colorMode={colorMode} className="mb-8">
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">About the Client</h2>
               
@@ -512,18 +460,11 @@ function GigDetailPage({ gigId, onBack }: GigDetailPageProps) {
                 </div>
               </div>
               
-              <Button
-                theme={theme}
-                variant="secondary"
-                colorMode={colorMode}
-                className="w-full flex items-center justify-center"
-              >
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Contact Client
-              </Button>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Apply to this gig to start a conversation with the client through our secure messaging system.
+              </p>
             </Card>
             
-            {/* Similar Gigs Card */}
             <Card theme={theme} colorMode={colorMode}>
               <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Similar Gigs</h2>
               

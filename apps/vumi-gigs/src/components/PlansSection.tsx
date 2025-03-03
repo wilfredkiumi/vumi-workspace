@@ -1,4 +1,3 @@
-import React from 'react';
 import { Briefcase, Building, Star } from 'lucide-react';
 import { Button, Card, THEMES } from 'ui';
 
@@ -8,7 +7,7 @@ interface PlansSectionProps {
   onViewPlans: () => void;
 }
 
-export function PlansSection({ theme, colorMode, onViewPlans }: PlansSectionProps) {
+export function PlansSection({ theme, onViewPlans }: PlansSectionProps) {
   return (
     <section className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">

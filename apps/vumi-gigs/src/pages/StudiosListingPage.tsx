@@ -1,107 +1,98 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, X, CheckSquare, Square, Building, SlidersHorizontal, ChevronDown } from 'lucide-react';
-import { Button, Card, useTheme } from 'ui';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useTheme, Button, Card } from 'ui';
 import { Studio } from '../models';
-import { StudioCard } from '../components/StudioCard';
+import { sampleStudios } from '../data/studioData';
+import { parseId } from '../utils/idGenerator';
+import { 
+  Search, 
+  Filter, 
+  MapPin, 
+  Star, 
+  Users,
+  Building,
+  CheckCircle,
+  Clock,
+  ChevronDown, // Added missing import
+  Square,
+  CheckSquare,
+  X
+} from 'lucide-react';
 
-// Sample studios data
-const sampleStudios: Studio[] = [
-  {
-    id: "s1",
-    name: "Dreamscape Studios",
-    description: "Full-service production studio specializing in animation, VFX, and game development.",
-    logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-    coverImage: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-    location: {
-      city: "Los Angeles",
-      country: "USA"
-    },
-    industry: ["Animation", "VFX", "Game Development"],
-    services: [
-      "3D Animation",
-      "Character Design",
-      "VFX Production",
-      "Game Asset Creation",
-      "Motion Capture"
-    ],
-    equipment: [
-      "RED Cinema Cameras",
-      "Motion Capture Studio",
-      "VR Development Kit",
-      "Professional Audio Suite"
-    ],
-    facilities: [
-      "5000 sq ft Studio Space",
-      "Green Screen Room",
-      "Recording Studio",
-      "Edit Suites"
-    ],
-    teamMembers: [
-      {
-        id: "tm1",
-        name: "Sarah Chen",
-        role: "Creative Director",
-        profileImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-        bio: "Award-winning creative director with 15 years of experience in animation and VFX."
-      }
-    ],
-    projects: [
-      {
-        id: "p1",
-        title: "Mystic Realms",
-        description: "Animated feature film with stunning visual effects and character animation.",
-        thumbnail: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-        category: "Animation",
-        completionDate: "2023-06-15"
-      }
-    ],
-    contacts: {
-      email: "contact@dreamscapestudios.com",
-      phone: "+1 (323) 555-0123",
-      website: "https://dreamscapestudios.com",
-      socialMedia: [
-        {
-          platform: "LinkedIn",
-          url: "https://linkedin.com/company/dreamscape-studios"
-        }
-      ]
-    },
-    metrics: {
-      rating: 4.8,
-      completedProjects: 150,
-      reviews: 75
-    },
-    verified: true,
-    featured: true,
-    createdAt: "2020-01-15T00:00:00Z",
-    updatedAt: "2023-09-01T00:00:00Z"
-  }
-];
-
-// Get unique industries, services, countries, and cities from sample data
-const allIndustries = Array.from(new Set(sampleStudios.flatMap(studio => studio.industry)));
-const allServices = Array.from(new Set(sampleStudios.flatMap(studio => studio.services)));
-const allCountries = Array.from(new Set(sampleStudios.map(studio => studio.location.country)));
-const allCities = Array.from(new Set(sampleStudios.map(studio => studio.location.city)));
-
-interface StudiosListingPageProps {
-  onStudioSelect?: (studioId: string) => void;
+interface StudioCardProps {
+  studio: Studio;
+  theme: string;
+  colorMode: string;
+  onClick?: () => void;
 }
 
-export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) {
-  const { theme, colorMode } = useTheme();
+// Studio Card Component without visible ID
+const StudioCard = ({ studio, theme, colorMode, onClick }: StudioCardProps) => {
+  return (
+    <Card 
+      theme={theme} 
+      colorMode={colorMode}
+      className="cursor-pointer hover:shadow-lg transition-shadow"
+      onClick={onClick}
+    >
+      <div className="h-48 mb-4">
+        <img 
+          src={studio.coverImage} 
+          alt={studio.name} 
+          className="w-full h-full object-cover rounded-t-lg"
+        />
+      </div>
+      
+      <div className="px-4 pb-4">
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
+          {studio.name}
+        </h3>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+          {studio.description}
+        </p>
+        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+          <MapPin className="h-4 w-4 mr-1" />
+          {studio.location.city}, {studio.location.country}
+        </div>
+        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
+          <Star className="h-4 w-4 mr-1" />
+          {studio.metrics.rating} ({studio.metrics.reviews} reviews)
+        </div>
+        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+          <Users className="h-4 w-4 mr-1" />
+          {studio.metrics.completedProjects} projects
+        </div>
+        {studio.verified && (
+          <div className="mt-2 flex items-center text-sm text-green-500">
+            <CheckCircle className="h-4 w-4 mr-1" />
+            Verified
+          </div>
+        )}
+      </div>
+    </Card>
+  );
+};
+
+function StudiosListingPage() {
+  const navigate = useNavigate();
+  const colorMode = "light"; // Default colorMode
+  const { theme } = useTheme();
   const [showFilters, setShowFilters] = useState(false);
+  const [showSortMenu, setShowSortMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({
-    industries: [] as string[],
     services: [] as string[],
     countries: [] as string[],
     cities: [] as string[],
-    verified: false,
-    featured: false,
+    studioType: 'all',
     sortBy: 'rating' as 'rating' | 'projects' | 'reviews'
   });
   const [filteredStudios, setFilteredStudios] = useState<Studio[]>(sampleStudios);
+  
+  // Extract all unique services, countries, and cities from studios
+  const allServices = Array.from(new Set(sampleStudios.flatMap(studio => studio.services)));
+  const allCountries = Array.from(new Set(sampleStudios.map(studio => studio.location.country)));
+  const allCities = Array.from(new Set(sampleStudios.map(studio => studio.location.city)));
   
   // Filter studios based on search query and filters
   useEffect(() => {
@@ -113,16 +104,13 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
       result = result.filter(studio => 
         studio.name.toLowerCase().includes(query) ||
         studio.description.toLowerCase().includes(query) ||
-        studio.industry.some(ind => ind.toLowerCase().includes(query)) ||
         studio.services.some(service => service.toLowerCase().includes(query))
       );
     }
     
-    // Filter by industries
-    if (filters.industries.length > 0) {
-      result = result.filter(studio => 
-        filters.industries.some(ind => studio.industry.includes(ind))
-      );
+    // Filter by studio type
+    if (filters.studioType !== 'all') {
+      result = result.filter(studio => studio.studioType === filters.studioType);
     }
     
     // Filter by services
@@ -146,43 +134,33 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
       );
     }
     
-    // Filter by verified status
-    if (filters.verified) {
-      result = result.filter(studio => studio.verified);
-    }
-    
-    // Filter by featured status
-    if (filters.featured) {
-      result = result.filter(studio => studio.featured);
-    }
-    
     // Sort studios
-    switch (filters.sortBy) {
-      case 'rating':
-        result = result.sort((a, b) => b.metrics.rating - a.metrics.rating);
-        break;
-      case 'projects':
-        result = result.sort((a, b) => b.metrics.completedProjects - a.metrics.completedProjects);
-        break;
-      case 'reviews':
-        result = result.sort((a, b) => b.metrics.reviews - a.metrics.reviews);
-        break;
+    if (filters.sortBy) {
+      result = [...result].sort((a, b) => {
+        switch (filters.sortBy) {
+          case 'rating':
+            return (b.metrics.rating || 0) - (a.metrics.rating || 0);
+          case 'projects':
+            return (b.metrics.completedProjects || 0) - (a.metrics.completedProjects || 0);
+          case 'reviews':
+            return (b.metrics.reviews || 0) - (a.metrics.reviews || 0);
+          default:
+            return 0;
+        }
+      });
     }
+    
+    // Featured studios always come first
+    result = [
+      ...result.filter(studio => studio.featured),
+      ...result.filter(studio => !studio.featured)
+    ];
     
     setFilteredStudios(result);
   }, [searchQuery, filters]);
   
   const toggleFilters = () => {
     setShowFilters(!showFilters);
-  };
-  
-  const toggleIndustry = (industry: string) => {
-    setFilters(prev => ({
-      ...prev,
-      industries: prev.industries.includes(industry)
-        ? prev.industries.filter(i => i !== industry)
-        : [...prev.industries, industry]
-    }));
   };
   
   const toggleService = (service: string) => {
@@ -221,51 +199,34 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
     }));
   };
   
-  const toggleVerified = () => {
-    setFilters(prev => ({
-      ...prev,
-      verified: !prev.verified
-    }));
-  };
-  
-  const toggleFeatured = () => {
-    setFilters(prev => ({
-      ...prev,
-      featured: !prev.featured
-    }));
-  };
-  
   const setSortBy = (sortBy: 'rating' | 'projects' | 'reviews') => {
     setFilters(prev => ({
       ...prev,
       sortBy
     }));
+    setShowSortMenu(false);
   };
   
   const clearFilters = () => {
     setFilters({
-      industries: [],
       services: [],
       countries: [],
       cities: [],
-      verified: false,
-      featured: false,
+      studioType: 'all',
       sortBy: 'rating'
     });
     setSearchQuery('');
   };
   
   const handleStudioClick = (studioId: string) => {
-    if (onStudioSelect) {
-      onStudioSelect(studioId);
-    }
+    navigate(`/studios/${studioId}`);
   };
   
   return (
     <div className="container mx-auto px-4 py-24">
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
-          Find Production Studios
+          Studios
         </h1>
         
         {/* Search and Filter Bar */}
@@ -291,9 +252,9 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
             className="flex items-center"
           >
             <Filter className="h-5 w-5 mr-2" />
-            Filters {(filters.industries.length > 0 || filters.services.length > 0 || filters.countries.length > 0 || filters.cities.length > 0 || filters.verified || filters.featured) && (
+            Filters {(filters.services.length > 0 || filters.countries.length > 0 || filters.cities.length > 0) && (
               <span className="ml-1 bg-blue-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {filters.industries.length + filters.services.length + filters.countries.length + filters.cities.length + (filters.verified ? 1 : 0) + (filters.featured ? 1 : 0)}
+                {filters.services.length + filters.countries.length + filters.cities.length}
               </span>
             )}
           </Button>
@@ -303,46 +264,48 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
               theme={theme} 
               variant="secondary" 
               colorMode={colorMode}
-              onClick={() => {}}
+              onClick={() => setShowSortMenu(!showSortMenu)}
               className="flex items-center"
             >
-              <SlidersHorizontal className="h-5 w-5 mr-2" />
+              <Users className="h-5 w-5 mr-2" />
               Sort: {filters.sortBy === 'rating' ? 'Highest Rated' : filters.sortBy === 'projects' ? 'Most Projects' : 'Most Reviews'}
               <ChevronDown className="h-4 w-4 ml-2" />
             </Button>
             
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 z-10">
-              <button 
-                className={`block w-full text-left px-4 py-2 text-sm ${
-                  filters.sortBy === 'rating' 
-                    ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200' 
-                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-                onClick={() => setSortBy('rating')}
-              >
-                Highest Rated
-              </button>
-              <button 
-                className={`block w-full text-left px-4 py-2 text-sm ${
-                  filters.sortBy === 'projects' 
-                    ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200' 
-                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-                onClick={() => setSortBy('projects')}
-              >
-                Most Projects
-              </button>
-              <button 
-                className={`block w-full text-left px-4 py-2 text-sm ${
-                  filters.sortBy === 'reviews' 
-                    ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200' 
-                    : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-                onClick={() => setSortBy('reviews')}
-              >
-                Most Reviews
-              </button>
-            </div>
+            {showSortMenu && (
+              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-1 z-10">
+                <button 
+                  className={`block w-full text-left px-4 py-2 text-sm ${
+                    filters.sortBy === 'rating' 
+                      ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200' 
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                  onClick={() => setSortBy('rating')}
+                >
+                  Highest Rated
+                </button>
+                <button 
+                  className={`block w-full text-left px-4 py-2 text-sm ${
+                    filters.sortBy === 'projects' 
+                      ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200' 
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                  onClick={() => setSortBy('projects')}
+                >
+                  Most Projects
+                </button>
+                <button 
+                  className={`block w-full text-left px-4 py-2 text-sm ${
+                    filters.sortBy === 'reviews' 
+                      ? 'bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200' 
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                  onClick={() => setSortBy('reviews')}
+                >
+                  Most Reviews
+                </button>
+              </div>
+            )}
           </div>
         </div>
         
@@ -350,27 +313,6 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
         {showFilters && (
           <Card theme={theme} colorMode={colorMode} className="mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Industry Filters */}
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Industries</h3>
-                <div className="max-h-48 overflow-y-auto space-y-2 pr-2">
-                  {allIndustries.map((industry) => (
-                    <div 
-                      key={industry}
-                      className="flex items-center cursor-pointer"
-                      onClick={() => toggleIndustry(industry)}
-                    >
-                      {filters.industries.includes(industry) ? (
-                        <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2 flex-shrink-0" />
-                      ) : (
-                        <Square className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
-                      )}
-                      <span className="text-gray-700 dark:text-gray-300 text-sm">{industry}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
               {/* Services Filters */}
               <div>
                 <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Services</h3>
@@ -444,55 +386,11 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
               </div>
             </div>
             
-            {/* Additional Filters */}
-            <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex flex-wrap gap-4">
-                <div 
-                  className="flex items-center cursor-pointer"
-                  onClick={toggleVerified}
-                >
-                  {filters.verified ? (
-                    <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                  ) : (
-                    <Square className="h-5 w-5 text-gray-400 mr-2" />
-                  )}
-                  <span className="text-gray-700 dark:text-gray-300">Verified Studios Only</span>
-                </div>
-                
-                <div 
-                  className="flex items-center cursor-pointer"
-                  onClick={toggleFeatured}
-                >
-                  {filters.featured ? (
-                    <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                  ) : (
-                    <Square className="h-5 w-5 text-gray-400 mr-2" />
-                  )}
-                  <span className="text-gray-700 dark:text-gray-300">Featured Studios</span>
-                </div>
-              </div>
-            </div>
-            
             {/* Active Filters */}
-            {(filters.industries.length > 0 || filters.services.length > 0 || filters.cities.length > 0 || filters.countries.length > 0 || filters.verified || filters.featured) && (
+            {(filters.services.length > 0 || filters.cities.length > 0 || filters.countries.length > 0) && (
               <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="text-sm font-medium text-gray-800 dark:text-white mb-2">Active Filters:</h3>
                 <div className="flex flex-wrap gap-2">
-                  {filters.industries.map(industry => (
-                    <span 
-                      key={industry}
-                      className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                    >
-                      {industry}
-                      <button 
-                        onClick={() => toggleIndustry(industry)}
-                        className="ml-1 text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-200"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  ))}
-                  
                   {filters.services.map(service => (
                     <span 
                       key={service}
@@ -538,30 +436,6 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
                     </span>
                   ))}
                   
-                  {filters.verified && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200">
-                      Verified Only
-                      <button 
-                        onClick={toggleVerified}
-                        className="ml-1 text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-200"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  )}
-                  
-                  {filters.featured && (
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200">
-                      Featured Only
-                      <button 
-                        onClick={toggleFeatured}
-                        className="ml-1 text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-200"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
-                    </span>
-                  )}
-                  
                   <button
                     onClick={clearFilters}
                     className="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
@@ -591,7 +465,7 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
                 studio={studio}
                 theme={theme}
                 colorMode={colorMode}
-                onClick={handleStudioClick}
+                onClick={() => handleStudioClick(studio.id)}
               />
             ))}
           </div>
@@ -617,3 +491,5 @@ export function StudiosListingPage({ onStudioSelect }: StudiosListingPageProps) 
     </div>
   );
 }
+
+export default StudiosListingPage;

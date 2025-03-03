@@ -1,284 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, X, CheckSquare, Square, Briefcase, SlidersHorizontal, ChevronDown } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Filter, X, CheckSquare, Square, SlidersHorizontal, ChevronDown, Briefcase } from 'lucide-react';
 import { Button, Card, useTheme } from 'ui';
-import { GigCard, Gig } from './GigCard';
-
-// Sample gigs data
-const sampleGigs: Gig[] = [
-  {
-    id: "g1",
-    title: "3D Character Modeling for Indie Game",
-    description: "We're looking for a talented 3D artist to create 5 character models for our upcoming indie game. The characters should be low-poly and match our existing art style. Experience with Blender and Unity is required.",
-    category: "Game Development",
-    subcategory: "3D Modeling",
-    budget: {
-      min: 1500,
-      max: 3000,
-      type: 'fixed'
-    },
-    duration: "2-4 weeks",
-    skills: ["3D Modeling", "Character Design", "Blender", "Unity", "Low-Poly", "Texturing"],
-    location: {
-      type: 'remote'
-    },
-    postedBy: {
-      id: "u1",
-      name: "GameStudio XYZ",
-      rating: 4.8,
-      verified: true
-    },
-    postedDate: "2023-06-15",
-    deadline: "2023-07-15",
-    applicants: 12,
-    status: 'open',
-    featured: true
-  },
-  {
-    id: "g2",
-    title: "Concept Art for Sci-Fi Animation Series",
-    description: "We need a concept artist to create environment and character designs for our upcoming sci-fi animation series. The style should be semi-realistic with a focus on unique alien landscapes and diverse character designs.",
-    category: "Animation",
-    subcategory: "Concept Art",
-    budget: {
-      min: 2000,
-      max: 4000,
-      type: 'fixed'
-    },
-    duration: "1-2 months",
-    skills: ["Concept Art", "Character Design", "Environment Design", "Digital Painting", "Sci-Fi", "Storyboarding"],
-    location: {
-      type: 'remote'
-    },
-    postedBy: {
-      id: "u2",
-      name: "Animation Studios Inc.",
-      rating: 4.9,
-      verified: true
-    },
-    postedDate: "2023-06-10",
-    deadline: "2023-07-10",
-    applicants: 8,
-    status: 'open'
-  },
-  {
-    id: "g3",
-    title: "Video Editor for YouTube Gaming Channel",
-    description: "Looking for an experienced video editor to join our team on a part-time basis. You'll be responsible for editing gameplay footage, adding effects, and ensuring our videos meet our quality standards before publishing.",
-    category: "Video Production",
-    subcategory: "Video Editing",
-    budget: {
-      min: 25,
-      max: 40,
-      type: 'hourly'
-    },
-    duration: "Ongoing",
-    skills: ["Video Editing", "Adobe Premiere Pro", "After Effects", "Sound Design", "YouTube", "Gaming Content"],
-    location: {
-      type: 'remote'
-    },
-    postedBy: {
-      id: "u3",
-      name: "GamersUnite Channel",
-      rating: 4.7,
-      verified: true
-    },
-    postedDate: "2023-06-18",
-    applicants: 24,
-    status: 'open'
-  },
-  {
-    id: "g4",
-    title: "UI/UX Designer for Mobile Game",
-    description: "We're seeking a UI/UX designer to create intuitive and visually appealing interfaces for our upcoming mobile game. The ideal candidate will have experience designing for mobile games and understanding player psychology.",
-    category: "Game Development",
-    subcategory: "UI/UX Design",
-    budget: {
-      min: 3000,
-      max: 5000,
-      type: 'fixed'
-    },
-    duration: "1-3 months",
-    skills: ["UI Design", "UX Design", "Mobile Games", "Figma", "Adobe XD", "Unity"],
-    location: {
-      type: 'hybrid',
-      city: "San Francisco",
-      country: "USA"
-    },
-    postedBy: {
-      id: "u4",
-      name: "Mobile Games Co.",
-      rating: 4.6,
-      verified: true
-    },
-    postedDate: "2023-06-05",
-    deadline: "2023-07-05",
-    applicants: 18,
-    status: 'open'
-  },
-  {
-    id: "g5",
-    title: "Sound Designer for Horror Game",
-    description: "Looking for a talented sound designer to create atmospheric and terrifying sound effects for our upcoming horror game. Experience with creating immersive audio environments and understanding of horror game audio is essential.",
-    category: "Game Development",
-    subcategory: "Sound Design",
-    budget: {
-      min: 2000,
-      max: 3500,
-      type: 'fixed'
-    },
-    duration: "2-3 months",
-    skills: ["Sound Design", "Audio Engineering", "Foley", "Game Audio", "Horror", "Unity"],
-    location: {
-      type: 'remote'
-    },
-    postedBy: {
-      id: "u5",
-      name: "Nightmare Games",
-      rating: 4.5,
-      verified: false
-    },
-    postedDate: "2023-06-12",
-    deadline: "2023-07-20",
-    applicants: 6,
-    status: 'open'
-  },
-  {
-    id: "g6",
-    title: "2D Animator for Explainer Video",
-    description: "We need a 2D animator to create a 2-minute explainer video for our new software product. The animation should be clean, professional, and effectively communicate our product's features and benefits.",
-    category: "Animation",
-    subcategory: "2D Animation",
-    budget: {
-      min: 1000,
-      max: 2000,
-      type: 'fixed'
-    },
-    duration: "2-3 weeks",
-    skills: ["2D Animation", "After Effects", "Character Animation", "Motion Graphics", "Storyboarding"],
-    location: {
-      type: 'remote'
-    },
-    postedBy: {
-      id: "u6",
-      name: "TechSolutions Ltd.",
-      rating: 4.3,
-      verified: true
-    },
-    postedDate: "2023-06-20",
-    deadline: "2023-07-10",
-    applicants: 15,
-    status: 'open'
-  },
-  {
-    id: "g7",
-    title: "Storyboard Artist for Animated Short Film",
-    description: "Seeking a storyboard artist for a 10-minute animated short film. The artist will work closely with the director to visualize the script and create detailed storyboards that capture the emotion and flow of the story.",
-    category: "Animation",
-    subcategory: "Storyboarding",
-    budget: {
-      min: 1500,
-      max: 2500,
-      type: 'fixed'
-    },
-    duration: "3-4 weeks",
-    skills: ["Storyboarding", "Visual Storytelling", "Character Expressions", "Scene Composition", "Animation"],
-    location: {
-      type: 'onsite',
-      city: "Los Angeles",
-      country: "USA"
-    },
-    postedBy: {
-      id: "u7",
-      name: "Indie Film Productions",
-      rating: 4.9,
-      verified: true
-    },
-    postedDate: "2023-06-08",
-    deadline: "2023-07-08",
-    applicants: 10,
-    status: 'open',
-    featured: true
-  },
-  {
-    id: "g8",
-    title: "Unity Developer for VR Experience",
-    description: "We're looking for an experienced Unity developer to help create an immersive VR experience for a museum exhibition. The ideal candidate will have strong 3D skills and previous experience with VR development.",
-    category: "Game Development",
-    subcategory: "VR Development",
-    budget: {
-      min: 40,
-      max: 60,
-      type: 'hourly'
-    },
-    duration: "3-6 months",
-    skills: ["Unity", "C#", "VR Development", "3D Modeling", "Oculus", "Interactive Design"],
-    location: {
-      type: 'hybrid',
-      city: "Chicago",
-      country: "USA"
-    },
-    postedBy: {
-      id: "u8",
-      name: "Museum Tech Innovations",
-      rating: 4.7,
-      verified: true
-    },
-    postedDate: "2023-06-01",
-    deadline: "2023-07-01",
-    applicants: 14,
-    status: 'in-progress'
-  }
-];
-
-// Categories for filtering
-const gigCategories = [
-  "Game Development",
-  "Animation",
-  "Video Production",
-  "3D Modeling",
-  "Concept Art",
-  "UI/UX Design",
-  "Sound Design",
-  "VR/AR Development",
-  "Motion Graphics",
-  "Visual Effects"
-];
-
-// Skills for filtering
-const commonSkills = [
-  "3D Modeling",
-  "Character Design",
-  "Animation",
-  "Unity",
-  "Unreal Engine",
-  "Blender",
-  "Maya",
-  "ZBrush",
-  "Adobe Creative Suite",
-  "After Effects",
-  "Premiere Pro",
-  "Concept Art",
-  "Storyboarding",
-  "Rigging",
-  "Texturing",
-  "UI Design",
-  "UX Design",
-  "Sound Design",
-  "Motion Capture",
-  "C#",
-  "C++",
-  "Python",
-  "JavaScript",
-  "VR Development",
-  "AR Development",
-  "Mobile Development"
-];
+import { GigCard } from './GigCard';
+import { sampleGigs, gigCategories, commonSkills } from './data/sampleGigs';
+import { Gig } from './models/Gig';
 
 interface GigsListingPageProps {
   onGigSelect?: (gigId: string) => void;
 }
 
 function GigsListingPage({ onGigSelect }: GigsListingPageProps) {
+  const navigate = useNavigate();
   const { theme, colorMode } = useTheme();
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -442,9 +175,7 @@ function GigsListingPage({ onGigSelect }: GigsListingPageProps) {
   };
   
   const handleGigClick = (gigId: string) => {
-    if (onGigSelect) {
-      onGigSelect(gigId);
-    }
+    navigate(`/gigs/${gigId}`);
   };
   
   return (
@@ -799,7 +530,7 @@ function GigsListingPage({ onGigSelect }: GigsListingPageProps) {
                   gig={gig}
                   theme={theme}
                   colorMode={colorMode}
-                  onClick={handleGigClick}
+                  onClick={() => handleGigClick(gig.id)}
                 />
               ))}
             </div>
@@ -817,7 +548,7 @@ function GigsListingPage({ onGigSelect }: GigsListingPageProps) {
                   gig={gig}
                   theme={theme}
                   colorMode={colorMode}
-                  onClick={handleGigClick}
+                  onClick={() => handleGigClick(gig.id)}
                 />
               ))}
             </div>

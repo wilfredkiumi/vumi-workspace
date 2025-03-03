@@ -1,5 +1,4 @@
-import React from 'react';
-import { Calendar, MapPin, Users, Tag, Globe } from 'lucide-react';
+import { Calendar, MapPin, Users, Tag , Globe} from 'lucide-react';
 import { Showcase } from './types';
 import { ThemeType, ColorMode } from './index';
 
@@ -12,9 +11,7 @@ interface ShowcaseCardProps {
 }
 
 export function ShowcaseCard({ 
-  showcase, 
-  theme, 
-  colorMode,
+  showcase,
   onClick,
   compact = false
 }: ShowcaseCardProps) {

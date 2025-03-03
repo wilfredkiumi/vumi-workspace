@@ -1,20 +1,18 @@
-import React from 'react';
-import { Mail, Phone, Globe, ExternalLink } from 'lucide-react';
+import { Mail, Phone, ExternalLink , Globe} from 'lucide-react';
 import { Studio } from '../../types';
 import { Card } from '../../index';
-import { ThemeType, ColorMode } from '../../index';
 
 interface StudioContactProps {
+  colorMode?: string;
+  theme?: string;
   studio: Studio;
-  theme: ThemeType;
-  colorMode: ColorMode;
 }
 
-export function StudioContact({
-  studio,
-  theme,
-  colorMode
-}: StudioContactProps) {
+export function StudioContact({ 
+  
+  
+  studio
+, theme = "gigs", colorMode = "light" }: StudioContactProps) {
   return (
     <Card theme={theme} colorMode={colorMode}>
       <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Contact Information</h2>

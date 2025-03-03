@@ -5,7 +5,9 @@
   "main": "./index.tsx",
   "types": "./index.tsx",
   "dependencies": {
-    "react": "^18.3.1"
+    "react": "^18.3.1",
+    "react-router-dom": "^6.15.0",
+    "lucide-react": "^0.263.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.5",
@@ -15,5 +17,9 @@
     "lint": "echo \"No linting configured for UI package\"",
     "dev": "echo \"UI package is ready for development\"",
     "build": "echo \"No build step needed for UI package\""
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   }
 }

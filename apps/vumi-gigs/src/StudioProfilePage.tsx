@@ -1,4 +1,3 @@
-import React from 'react';
 import { StudioProfilePage as StudioProfile } from 'ui';
 
 interface StudioProfilePageProps {

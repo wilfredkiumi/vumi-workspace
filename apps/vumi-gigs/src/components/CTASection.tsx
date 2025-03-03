@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, THEMES } from 'ui';
 
 interface CTASectionProps {
@@ -8,7 +7,7 @@ interface CTASectionProps {
   onPostGig: () => void;
 }
 
-export function CTASection({ theme, colorMode, onFindGigs, onPostGig }: CTASectionProps) {
+export function CTASection({ theme, onFindGigs, onPostGig }: CTASectionProps) {
   return (
     <section className="relative py-16">
       {/* Background Image with Overlay */}

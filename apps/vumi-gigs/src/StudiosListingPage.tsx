@@ -1,4 +1,3 @@
-import React from 'react';
 import { StudiosListingPage as StudiosListing } from 'ui';
 
 interface StudiosListingPageProps {

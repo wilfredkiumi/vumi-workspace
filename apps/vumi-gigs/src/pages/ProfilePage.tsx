@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
 import { useAuth } from '../contexts/AuthContext';
 import { useUserProfile } from '../hooks/useUserProfile';
@@ -14,7 +14,8 @@ enum ProfileTab {
 }
 
 export function ProfilePage() {
-  const { theme, colorMode } = useTheme();
+  const colorMode = "light"; // Default colorMode
+  const { theme } = useTheme();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { profile, loading: profileLoading } = useUserProfile();
   const { creator, loading: creatorLoading } = useCreator();
@@ -383,7 +384,7 @@ export function ProfilePage() {
                 setIsEditing(false);
               }}
             >
-              <Briefcase className="h-5 w-5 inline-block mr-2" />
+              <span className="h-5 w-5 inline-block mr-2">📁</span>
               Creator Profile
             </button>
             <button

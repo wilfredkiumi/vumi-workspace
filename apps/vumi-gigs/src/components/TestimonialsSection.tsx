@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card } from 'ui';
 
 interface TestimonialsSectionProps {
@@ -6,7 +5,7 @@ interface TestimonialsSectionProps {
   colorMode: 'light' | 'dark';
 }
 
-export function TestimonialsSection({ theme, colorMode }: TestimonialsSectionProps) {
+export function TestimonialsSection({ theme }: TestimonialsSectionProps) {
   return (
     <section className="py-16 bg-white dark:bg-gray-800">
       <div className="container mx-auto px-4">

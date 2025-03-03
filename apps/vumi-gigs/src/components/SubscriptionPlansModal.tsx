@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect  } from 'react';
 import { useTheme, Button, Card } from 'ui';
 import { X, Check } from 'lucide-react';
 import { usePayment } from '../hooks/usePayment';
@@ -11,7 +11,7 @@ interface SubscriptionPlansModalProps {
 }
 
 export function SubscriptionPlansModal({ onClose, onSuccess, currentPlanId }: SubscriptionPlansModalProps) {
-  const { theme, colorMode } = useTheme();
+  const { theme } = useTheme();
   const { loading: paymentLoading, createSubscription, redirectToCheckout } = usePayment();
   
   const [plans, setPlans] = useState<SubscriptionPlan[]>([]);

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Search, Users, DollarSign } from 'lucide-react';
+import {  Search, Users , DollarSign } from 'lucide-react';
 import { Card, THEMES } from 'ui';
 
 interface FeaturesSectionProps {
@@ -7,7 +6,7 @@ interface FeaturesSectionProps {
   colorMode: 'light' | 'dark';
 }
 
-export function FeaturesSection({ theme, colorMode }: FeaturesSectionProps) {
+export function FeaturesSection({ theme }: FeaturesSectionProps) {
   return (
     <section className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">

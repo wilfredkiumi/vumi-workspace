@@ -1,22 +1,29 @@
-import { post, get } from '@aws-amplify/api';
-import { GraphQLQuery, GraphQLSubscription } from '@aws-amplify/api';
+import { post } from '@aws-amplify/api';
+
+// Define PostOperation interface
+interface PostOperation {
+  data?: any;
+}
+
+// Define PostOperation interface
 import * as queries from './graphql/queries';
 import * as mutations from './graphql/mutations';
-import * as subscriptions from './graphql/subscriptions';
+
 import { Gig, Creator, Application, User } from '../models';
+import { PostOperation } from "../../services/api-types.js";
 
 // User API
 export const getUser = async (id: string): Promise<User | null> => {
   try {
-    const response = await post<GraphQLQuery<{ getUser: User }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.getUser,
+        body: queries.getUser,
         variables: { id }
       }
     });
-    return response.data?.getUser || null;
+    return (response as any).data?.getUser || null;
   } catch (error) {
     console.error('Error fetching user:', error);
     return null;
@@ -25,15 +32,15 @@ export const getUser = async (id: string): Promise<User | null> => {
 
 export const createUser = async (input: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User | null> => {
   try {
-    const response = await post<GraphQLQuery<{ createUser: User }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: mutations.createUser,
+        body: mutations.createUser,
         variables: { input }
       }
     });
-    return response.data?.createUser || null;
+    return (response as any).data?.createUser || null;
   } catch (error) {
     console.error('Error creating user:', error);
     return null;
@@ -42,15 +49,15 @@ export const createUser = async (input: Omit<User, 'id' | 'createdAt' | 'updated
 
 export const updateUser = async (input: Partial<User> & { id: string }): Promise<User | null> => {
   try {
-    const response = await post<GraphQLQuery<{ updateUser: User }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: mutations.updateUser,
+        body: mutations.updateUser,
         variables: { input }
       }
     });
-    return response.data?.updateUser || null;
+    return (response as any).data?.updateUser || null;
   } catch (error) {
     console.error('Error updating user:', error);
     return null;
@@ -60,15 +67,15 @@ export const updateUser = async (input: Partial<User> & { id: string }): Promise
 // Gig API
 export const listGigs = async (filter?: any, limit?: number): Promise<Gig[]> => {
   try {
-    const response = await post<GraphQLQuery<{ listGigs: { items: Gig[] } }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.listGigs,
+        body: queries.listGigs,
         variables: { filter, limit }
       }
     });
-    return response.data?.listGigs.items || [];
+    return (response as any).data?.listGigs.items || [];
   } catch (error) {
     console.error('Error listing gigs:', error);
     return [];
@@ -77,15 +84,15 @@ export const listGigs = async (filter?: any, limit?: number): Promise<Gig[]> => 
 
 export const getGig = async (id: string): Promise<Gig | null> => {
   try {
-    const response = await post<GraphQLQuery<{ getGig: Gig }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.getGig,
+        body: queries.getGig,
         variables: { id }
       }
     });
-    return response.data?.getGig || null;
+    return (response as any).data?.getGig || null;
   } catch (error) {
     console.error('Error fetching gig:', error);
     return null;
@@ -94,15 +101,15 @@ export const getGig = async (id: string): Promise<Gig | null> => {
 
 export const createGig = async (input: Omit<Gig, 'id'>): Promise<Gig | null> => {
   try {
-    const response = await post<GraphQLQuery<{ createGig: Gig }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: mutations.createGig,
+        body: mutations.createGig,
         variables: { input }
       }
     });
-    return response.data?.createGig || null;
+    return (response as any).data?.createGig || null;
   } catch (error) {
     console.error('Error creating gig:', error);
     return null;
@@ -111,15 +118,15 @@ export const createGig = async (input: Omit<Gig, 'id'>): Promise<Gig | null> => 
 
 export const updateGig = async (input: Partial<Gig> & { id: string }): Promise<Gig | null> => {
   try {
-    const response = await post<GraphQLQuery<{ updateGig: Gig }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: mutations.updateGig,
+        body: mutations.updateGig,
         variables: { input }
       }
     });
-    return response.data?.updateGig || null;
+    return (response as any).data?.updateGig || null;
   } catch (error) {
     console.error('Error updating gig:', error);
     return null;
@@ -128,11 +135,11 @@ export const updateGig = async (input: Partial<Gig> & { id: string }): Promise<G
 
 export const deleteGig = async (id: string): Promise<boolean> => {
   try {
-    await post<GraphQLQuery<{ deleteGig: { id: string } }>>({
+    await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: mutations.deleteGig,
+        body: mutations.deleteGig,
         variables: { input: { id } }
       }
     });
@@ -146,15 +153,15 @@ export const deleteGig = async (id: string): Promise<boolean> => {
 // Creator API
 export const listCreators = async (filter?: any, limit?: number): Promise<Creator[]> => {
   try {
-    const response = await post<GraphQLQuery<{ listCreators: { items: Creator[] } }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.listCreators,
+        body: queries.listCreators,
         variables: { filter, limit }
       }
     });
-    return response.data?.listCreators.items || [];
+    return (response as any).data?.listCreators.items || [];
   } catch (error) {
     console.error('Error listing creators:', error);
     return [];
@@ -163,15 +170,15 @@ export const listCreators = async (filter?: any, limit?: number): Promise<Creato
 
 export const getCreator = async (id: string): Promise<Creator | null> => {
   try {
-    const response = await post<GraphQLQuery<{ getCreator: Creator }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.getCreator,
+        body: queries.getCreator,
         variables: { id }
       }
     });
-    return response.data?.getCreator || null;
+    return (response as any).data?.getCreator || null;
   } catch (error) {
     console.error('Error fetching creator:', error);
     return null;
@@ -181,15 +188,15 @@ export const getCreator = async (id: string): Promise<Creator | null> => {
 // Application API
 export const createApplication = async (input: Omit<Application, 'id' | 'createdAt' | 'updatedAt'>): Promise<Application | null> => {
   try {
-    const response = await post<GraphQLQuery<{ createApplication: Application }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: mutations.createApplication,
+        body: mutations.createApplication,
         variables: { input }
       }
     });
-    return response.data?.createApplication || null;
+    return (response as any).data?.createApplication || null;
   } catch (error) {
     console.error('Error creating application:', error);
     return null;
@@ -198,15 +205,15 @@ export const createApplication = async (input: Omit<Application, 'id' | 'created
 
 export const getApplication = async (id: string): Promise<Application | null> => {
   try {
-    const response = await post<GraphQLQuery<{ getApplication: Application }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.getApplication,
+        body: queries.getApplication,
         variables: { id }
       }
     });
-    return response.data?.getApplication || null;
+    return (response as any).data?.getApplication || null;
   } catch (error) {
     console.error('Error fetching application:', error);
     return null;
@@ -215,15 +222,15 @@ export const getApplication = async (id: string): Promise<Application | null> =>
 
 export const listApplicationsByGig = async (gigId: string): Promise<Application[]> => {
   try {
-    const response = await post<GraphQLQuery<{ listApplications: { items: Application[] } }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.listApplications,
+        body: queries.listApplications,
         variables: { filter: { gigId: { eq: gigId } } }
       }
     });
-    return response.data?.listApplications.items || [];
+    return (response as any).data?.listApplications.items || [];
   } catch (error) {
     console.error('Error listing applications by gig:', error);
     return [];
@@ -232,15 +239,15 @@ export const listApplicationsByGig = async (gigId: string): Promise<Application[
 
 export const listApplicationsByUser = async (userId: string): Promise<Application[]> => {
   try {
-    const response = await post<GraphQLQuery<{ listApplications: { items: Application[] } }>>({
+    const response = await post({
       apiName: 'WorkspaceAPI',
       path: '/graphql',
       options: {
-        query: queries.listApplications,
+        body: queries.listApplications,
         variables: { filter: { userId: { eq: userId } } }
       }
     });
-    return response.data?.listApplications.items || [];
+    return (response as any).data?.listApplications.items || [];
   } catch (error) {
     console.error('Error listing applications by user:', error);
     return [];

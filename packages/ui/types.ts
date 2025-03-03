@@ -4,8 +4,7 @@ export enum ProfileMode {
   BASIC = "basic",
   BASIC_WITH_ADS = "basic_with_ads",
   PRO = "pro",
-  PREMIUM = "premium",
-}
+  PREMIUM = "premium" }
 
 export interface SocialLink {
   platform: string;
@@ -194,8 +193,8 @@ export interface CreatorPlan {
 
 export interface TabProps {
   label: string;
-  icon?: ReactNode;
-  content: ReactNode;
+  icon?: any; // ReactNode
+  content: any; // ReactNode
 }
 
 export interface CreatorFilter {

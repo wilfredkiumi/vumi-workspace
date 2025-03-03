@@ -1,20 +1,18 @@
-import React from 'react';
 import { Building, PenTool as Tool } from 'lucide-react';
 import { Studio } from '../../types';
 import { Card } from '../../index';
-import { ThemeType, ColorMode } from '../../index';
 
 interface StudioFacilitiesProps {
+  colorMode?: string;
+  theme?: string;
   studio: Studio;
-  theme: ThemeType;
-  colorMode: ColorMode;
 }
 
-export function StudioFacilities({
-  studio,
-  theme,
-  colorMode
-}: StudioFacilitiesProps) {
+export function StudioFacilities({ 
+  
+  
+  studio
+, theme = "gigs", colorMode = "light" }: StudioFacilitiesProps) {
   return (
     <div className="space-y-8">
       {/* Facilities */}

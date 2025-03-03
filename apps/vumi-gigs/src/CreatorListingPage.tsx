@@ -1,178 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Filter, X, CheckSquare, Square, Users } from 'lucide-react';
-import { Button, Card, CreatorCard, useTheme, Creator, CreatorFilter, ProfileMode } from 'ui';
-
-// Sample creators data
-const sampleCreators: Creator[] = [
-  {
-    id: "1",
-    workspaceId: "ws-123",
-    name: "Alex Johnson",
-    username: "alexjohnson",
-    bio: "Lifestyle and tech influencer with a passion for creating engaging content that resonates with young professionals.",
-    profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    coverImage: "https://images.unsplash.com/photo-1587620962725-abab7fe55159?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1489&q=80",
-    location: {
-      city: "San Francisco",
-      country: "USA"
-    },
-    categories: ["Technology", "Lifestyle"],
-    skills: ["Content Creation", "Video Editing", "Photography", "Social Media Marketing"],
-    experience: [
-      {
-        role: "Tech Influencer",
-        company: "Self-employed",
-        startDate: "Jan 2020",
-        description: "Created tech review content across multiple platforms."
-      }
-    ],
-    portfolio: [
-      {
-        title: "Smartphone Review Series",
-        description: "In-depth video reviews of the latest smartphone releases.",
-        thumbnailUrl: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-        projectUrl: "https://example.com/project1"
-      }
-    ],
-    socialLinks: [
-      {
-        platform: "youtube",
-        url: "https://youtube.com/alexjohnson",
-        followers: 350000
-      }
-    ],
-    metrics: {
-      rating: 4.9,
-      responseRate: 98,
-      completedProjects: 47,
-      reviewCount: 38
-    },
-    verified: true,
-    featured: true,
-    creatorType: "influencer",
-    audienceSize: 650000,
-    platforms: ["YouTube", "Instagram", "TikTok"],
-    contentTypes: ["Video", "Photo"],
-    mode: ProfileMode.PRO,
-    isAvailableForHire: true,
-    freelanceStatus: true
-  },
-  {
-    id: "2",
-    workspaceId: "ws-456",
-    name: "Vision Studios",
-    username: "visionstudios",
-    bio: "Professional video production crew specializing in commercial, documentary, and corporate video content.",
-    profileImage: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    coverImage: "https://images.unsplash.com/photo-1598387993281-cecf8b71a8f8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1489&q=80",
-    location: {
-      city: "Los Angeles",
-      country: "USA"
-    },
-    categories: ["Video Production", "Cinematography"],
-    skills: ["Video Production", "Cinematography", "Lighting", "Sound Design"],
-    experience: [
-      {
-        role: "Production Team",
-        company: "Major Streaming Service",
-        startDate: "Mar 2021",
-        description: "Produced documentary-style content for streaming platform."
-      }
-    ],
-    portfolio: [
-      {
-        title: "Eco-Friendly Brand Campaign",
-        description: "Series of commercials highlighting sustainable practices.",
-        thumbnailUrl: "https://images.unsplash.com/photo-1626050954744-92bf034ce476?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-        projectUrl: "https://example.com/project1"
-      }
-    ],
-    socialLinks: [
-      {
-        platform: "instagram",
-        url: "https://instagram.com/visionstudios",
-        followers: 45000
-      }
-    ],
-    metrics: {
-      rating: 4.8,
-      responseRate: 95,
-      completedProjects: 63,
-      reviewCount: 52
-    },
-    verified: true,
-    featured: true,
-    creatorType: "crew",
-    teamSize: 6,
-    equipmentOwned: ["RED Cinema Camera", "Sony FS7"],
-    specializations: ["Commercial Production", "Documentary"],
-    mode: ProfileMode.PREMIUM,
-    isAvailableForHire: true
-  },
-  {
-    id: "3",
-    workspaceId: "ws-789",
-    name: "Sarah Williams",
-    username: "sarahwilliams",
-    bio: "Professional photographer specializing in portrait and commercial photography with a unique artistic style.",
-    profileImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    coverImage: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1489&q=80",
-    location: {
-      city: "Chicago",
-      country: "USA"
-    },
-    categories: ["Photography", "Portrait"],
-    skills: ["Photography", "Lighting", "Photoshop", "Lightroom"],
-    experience: [
-      {
-        role: "Freelance Photographer",
-        company: "Self-employed",
-        startDate: "Jan 2018",
-        description: "Specialized in portrait and commercial photography for various clients."
-      }
-    ],
-    portfolio: [
-      {
-        title: "Urban Portrait Series",
-        description: "A collection of urban portraits showcasing diverse individuals in city environments.",
-        thumbnailUrl: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-        projectUrl: "https://example.com/project1"
-      }
-    ],
-    socialLinks: [
-      {
-        platform: "instagram",
-        url: "https://instagram.com/sarahwilliams",
-        followers: 75000
-      }
-    ],
-    metrics: {
-      rating: 4.7,
-      responseRate: 90,
-      completedProjects: 38,
-      reviewCount: 32
-    },
-    verified: true,
-    featured: false,
-    creatorType: "influencer",
-    audienceSize: 90000,
-    platforms: ["Instagram", "Behance"],
-    contentTypes: ["Photo"],
-    mode: ProfileMode.BASIC_WITH_ADS,
-    isAvailableForHire: true,
-    freelanceStatus: true
-  }
-];
+import { Button, Card, CreatorCard, useTheme } from 'ui';
+import { sampleCreators } from './data/sampleCreators';
+import { Creator, CreatorType } from './models/Creator';
 
 interface CreatorListingPageProps {
   onCreatorSelect?: (creatorId: string) => void;
 }
 
-function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
+// Change to default export
+export default function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
+  const navigate = useNavigate();
   const { theme, colorMode } = useTheme();
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filters, setFilters] = useState<CreatorFilter>({
+  const [filters, setFilters] = useState<{
+    skills: string[];
+    countries: string[];
+    cities: string[];
+    creatorType: string;
+    profileMode: undefined | string;
+  }>({
     skills: [],
     countries: [],
     cities: [],
@@ -201,9 +50,16 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
       );
     }
     
-    // Filter by creator type
+    // Update creator type filtering to handle INFLUENCER type
     if (filters.creatorType !== 'all') {
-      result = result.filter(creator => creator.creatorType === filters.creatorType);
+      result = result.filter(creator => {
+        if (filters.creatorType === 'influencer') {
+          return creator.creatorType === CreatorType.INFLUENCER;
+        } else if (filters.creatorType === 'crew') {
+          return creator.creatorType !== CreatorType.INFLUENCER;
+        }
+        return true;
+      });
     }
     
     // Filter by skills
@@ -270,7 +126,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
     }));
   };
   
-  const setCreatorType = (type: 'all' | 'influencer' | 'crew') => {
+  const setCreatorType = (type: string) => {
     setFilters(prev => ({
       ...prev,
       creatorType: type
@@ -285,16 +141,64 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
       creatorType: 'all',
       profileMode: undefined
     });
+
     setSearchQuery('');
   };
   
   const handleCreatorClick = (creatorId: string) => {
-    console.log(`Clicked on creator with ID: ${creatorId}`);
     if (onCreatorSelect) {
       onCreatorSelect(creatorId);
+    } else {
+      // Navigate to the creator profile page using the updated ID format
+      navigate(`/creators/${creatorId}`);
     }
   };
-  
+
+  const renderCreatorTypeFilter = () => {
+    return (
+      <div>
+        <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Creator Type</h3>
+        <div className="space-y-2">
+          <div 
+            className="flex items-center cursor-pointer"
+            onClick={() => setCreatorType('all')}
+          >
+            {filters.creatorType === 'all' ? (
+              <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
+            ) : (
+              <Square className="h-5 w-5 text-gray-400 mr-2" />
+            )}
+            <span className="text-gray-700 dark:text-gray-300">All Creators</span>
+          </div>
+          
+          <div 
+            className="flex items-center cursor-pointer"
+            onClick={() => setCreatorType('influencer')}
+          >
+            {filters.creatorType === 'influencer' ? (
+              <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
+            ) : (
+              <Square className="h-5 w-5 text-gray-400 mr-2" />
+            )}
+            <span className="text-gray-700 dark:text-gray-300">Content Creators</span>
+          </div>
+          
+          <div 
+            className="flex items-center cursor-pointer"
+            onClick={() => setCreatorType('individual')}
+          >
+            {filters.creatorType === 'individual' ? (
+              <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
+            ) : (
+              <Square className="h-5 w-5 text-gray-400 mr-2" />
+            )}
+            <span className="text-gray-700 dark:text-gray-300">Individual Creators</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="container mx-auto px-4 py-24">
       <div className="max-w-7xl mx-auto">
@@ -338,46 +242,7 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
           <Card theme={theme} colorMode={colorMode} className="mb-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Creator Type Filter */}
-              <div>
-                <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-3">Creator Type</h3>
-                <div className="space-y-2">
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setCreatorType('all')}
-                  >
-                    {filters.creatorType === ' all' ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">All Creators</span>
-                  </div>
-                  
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setCreatorType('influencer')}
-                  >
-                    {filters.creatorType === 'influencer' ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">Influencers</span>
-                  </div>
-                  
-                  <div 
-                    className="flex items-center cursor-pointer"
-                    onClick={() => setCreatorType('crew')}
-                  >
-                    {filters.creatorType === 'crew' ? (
-                      <CheckSquare className="h-5 w-5 text-blue-600 dark:text-blue-400 mr-2" />
-                    ) : (
-                      <Square className="h-5 w-5 text-gray-400 mr-2" />
-                    )}
-                    <span className="text-gray-700 dark:text-gray-300">Crews</span>
-                  </div>
-                </div>
-              </div>
+              {renderCreatorTypeFilter()}
               
               {/* Skills Filter */}
               <div>
@@ -569,5 +434,3 @@ function CreatorListingPage({ onCreatorSelect }: CreatorListingPageProps) {
     </div>
   );
 }
-
-export default CreatorListingPage;

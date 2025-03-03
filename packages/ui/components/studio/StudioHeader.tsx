@@ -1,24 +1,22 @@
-import React from 'react';
-import { CheckCircle, Award } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 import { Studio } from '../../types';
 import { Button } from '../../index';
-import { ThemeType, ColorMode } from '../../index';
 
 interface StudioHeaderProps {
+  colorMode?: string;
+  theme?: string;
   studio: Studio;
-  theme: ThemeType;
-  colorMode: ColorMode;
   onContact?: () => void;
   onShare?: () => void;
 }
 
-export function StudioHeader({
+export function StudioHeader({ 
+  
+  
   studio,
-  theme,
-  colorMode,
   onContact,
   onShare
-}: StudioHeaderProps) {
+, theme = "gigs", colorMode = "light" }: StudioHeaderProps) {
   return (
     <div className="relative rounded-xl overflow-hidden mb-12">
       {/* Cover Image */}

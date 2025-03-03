@@ -1,19 +1,11 @@
-import React from 'react';
 import { useApp } from '../context/AppContext';
 import { Button, Card, THEMES } from 'ui';
-import { 
-  FileCheck, 
-  Briefcase, 
+import { FileCheck, 
   Star, 
-  Award, 
   Users, 
   Building, 
-  Shield, 
-  Zap, 
-  Globe, 
-  Clock, 
-  DollarSign 
-} from 'lucide-react';
+  Shield 
+, Briefcase, Zap, Award } from 'lucide-react';
 
 function HomePage() {
   const { dispatch } = useApp();

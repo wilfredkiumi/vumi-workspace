@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, THEMES } from 'ui';
 
 interface HowItWorksSectionProps {
@@ -7,7 +6,7 @@ interface HowItWorksSectionProps {
   onLearnMore: () => void;
 }
 
-export function HowItWorksSection({ theme, colorMode, onLearnMore }: HowItWorksSectionProps) {
+export function HowItWorksSection({ theme, onLearnMore }: HowItWorksSectionProps) {
   return (
     <section className="py-16 bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4">

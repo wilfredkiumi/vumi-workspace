@@ -1,24 +1,22 @@
-import React from 'react';
-import { Check, X, Lock } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import { CreatorPlan, ProfileMode } from './types';
 import { Button } from './index';
-import { ThemeType, ColorMode } from './index';
 
 interface CreatorPlansProps {
+  colorMode?: string;
+  theme?: string;
   plans: CreatorPlan[];
   currentPlan?: ProfileMode;
-  theme: ThemeType;
-  colorMode: ColorMode;
   onSelectPlan: (planId: string) => void;
 }
 
-export function CreatorPlans({
+export function CreatorPlans({ 
+  
+  
   plans,
   currentPlan,
-  theme,
-  colorMode,
   onSelectPlan
-}: CreatorPlansProps) {
+, theme = "gigs", colorMode = "light" }: CreatorPlansProps) {
   const handleSelectPlan = (planId: string) => {
     onSelectPlan(planId);
   };

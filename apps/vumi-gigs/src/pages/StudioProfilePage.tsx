@@ -1,157 +1,113 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme, Button, Card } from 'ui';
 import { Studio } from '../models';
-import { MapPin, Mail, Phone, Globe, Star, Users, Film, Award, Camera, Briefcase, Building, MessageSquare, ChevronLeft, ExternalLink, CheckCircle, Calendar, Heart, Share2, Tag, PenTool as Tool } from 'lucide-react';
-
-// Sample studio data
-const sampleStudio: Studio = {
-  id: "s1",
-  name: "Dreamscape Studios",
-  description: "Full-service production studio specializing in animation, VFX, and game development. Our team of experienced artists and developers creates stunning visual content for clients worldwide.",
-  logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-  coverImage: "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-  location: {
-    city: "Los Angeles",
-    country: "USA"
-  },
-  industry: ["Animation", "VFX", "Game Development"],
-  services: [
-    "3D Animation",
-    "Character Design",
-    "VFX Production",
-    "Game Asset Creation",
-    "Motion Capture"
-  ],
-  equipment: [
-    "RED Cinema Cameras",
-    "Motion Capture Studio",
-    "VR Development Kit",
-    "Professional Audio Suite"
-  ],
-  facilities: [
-    "5000 sq ft Studio Space",
-    "Green Screen Room",
-    "Recording Studio",
-    "Edit Suites"
-  ],
-  teamMembers: [
-    {
-      id: "tm1",
-      name: "Sarah Chen",
-      role: "Creative Director",
-      profileImage: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      bio: "Award-winning creative director with 15 years of experience in animation and VFX."
-    },
-    {
-      id: "tm2",
-      name: "Michael Rodriguez",
-      role: "Technical Director",
-      profileImage: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      bio: "Expert in pipeline development and technical optimization for animation and VFX projects."
-    },
-    {
-      id: "tm3",
-      name: "Emily Wong",
-      role: "Lead Animator",
-      profileImage: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      bio: "Specializes in character animation and motion design with a focus on storytelling through movement."
-    }
-  ],
-  projects: [
-    {
-      id: "p1",
-      title: "Mystic Realms",
-      description: "Animated feature film with stunning visual effects and character animation.",
-      thumbnail: "https://images.unsplash.com/photo-1618005198919-d3d4b5a92ead?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1374&q=80",
-      category: "Animation",
-      completionDate: "2023-06-15"
-    },
-    {
-      id: "p2",
-      title: "Future City VFX",
-      description: "Visual effects for a sci-fi series showcasing futuristic cityscapes.",
-      thumbnail: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-      category: "VFX",
-      completionDate: "2023-08-20"
-    },
-    {
-      id: "p3",
-      title: "Adventure Quest Assets",
-      description: "Game asset creation including characters, environments, and props.",
-      thumbnail: "https://images.unsplash.com/photo-1558655146-d09347e92766?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-      category: "Game Development",
-      completionDate: "2023-09-10"
-    }
-  ],
-  showcases: [
-    {
-      id: "sh1",
-      title: "Animation Expo 2023",
-      description: "Showcasing our latest animation and VFX work.",
-      thumbnail: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-      date: "2023-09-20"
-    }
-  ],
-  contacts: {
-    email: "contact@dreamscapestudios.com",
-    phone: "+1 (323) 555-0123",
-    website: "https://dreamscapestudios.com",
-    socialMedia: [
-      {
-        platform: "LinkedIn",
-        url: "https://linkedin.com/company/dreamscape-studios"
-      },
-      {
-        platform: "Instagram",
-        url: "https://instagram.com/dreamscapestudios"
-      },
-      {
-        platform: "Twitter",
-        url: "https://twitter.com/dreamscapestudios"
-      }
-    ]
-  },
-  metrics: {
-    rating: 4.8,
-    completedProjects: 150,
-    reviews: 75
-  },
-  verified: true,
-  featured: true,
-  createdAt: "2020-01-15T00:00:00Z",
-  updatedAt: "2023-09-01T00:00:00Z"
-};
+import { getStudioById } from '../data/studioData';
+import { parseId } from '../utils/idGenerator';
+import { 
+  MapPin, 
+  Mail, 
+  Phone, 
+  Star, 
+  Users, 
+  Film, 
+  Building, 
+  MessageSquare, 
+  ChevronLeft, 
+  ExternalLink, 
+  CheckCircle, 
+  Calendar, 
+  Heart, 
+  Share2, 
+  Tag, 
+  PenTool as Tool,
+  Globe,
+  Info
+} from 'lucide-react';
 
 interface StudioProfilePageProps {
-  studioId: string;
+  studioId?: string;
   onBack?: () => void;
   onViewProject?: (projectId: string) => void;
   onViewShowcase?: (showcaseId: string) => void;
 }
 
 export function StudioProfilePage({ 
-  studioId, 
+  studioId: propStudioId, 
   onBack,
   onViewProject,
   onViewShowcase
 }: StudioProfilePageProps) {
+  const navigate = useNavigate();
+  const { studioId: urlStudioId } = useParams<{ studioId: string }>();
+  const studioId = propStudioId || urlStudioId;
+  
   const { theme, colorMode } = useTheme();
   const [studio, setStudio] = useState<Studio | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'projects' | 'team' | 'facilities'>('about');
   const [showContactForm, setShowContactForm] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   
+  // ID information display state
+  const [idInfo, setIdInfo] = useState<{
+    type: string;
+    date: string;
+    sequence: string;
+  } | null>(null);
+  
   useEffect(() => {
-    // In a real app, this would fetch the studio data from an API
-    setStudio(sampleStudio);
+    const loadStudio = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        if (!studioId) {
+          throw new Error('No studio ID provided');
+        }
+
+        const foundStudio = getStudioById(studioId);
+        
+        if (!foundStudio) {
+          throw new Error(`Studio with ID ${studioId} not found`);
+        }
+
+        setStudio(foundStudio);
+        
+        // Parse and set ID information
+        const parsed = parseId(foundStudio.id);
+        if (parsed.entityType && parsed.date && parsed.counter !== null) {
+          setIdInfo({
+            type: parsed.entityType.toUpperCase(),
+            date: parsed.date.toLocaleDateString(),
+            sequence: String(parsed.counter).padStart(3, '0')
+          });
+        }
+      } catch (err) {
+        console.error('Error loading studio:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load studio');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadStudio();
   }, [studioId]);
+
+  const handleBack = () => {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate('/studios');
+    }
+  };
   
   const handleContact = () => {
     setShowContactForm(true);
   };
   
   const handleShare = () => {
-    // In a real app, this would open a share dialog
     console.log('Share studio:', studio?.name);
   };
   
@@ -171,7 +127,8 @@ export function StudioProfilePage({
     }
   };
   
-  if (!studio) {
+  // Show loading state
+  if (loading) {
     return (
       <div className="container mx-auto px-4 py-24">
         <div className="max-w-7xl mx-auto">
@@ -184,20 +141,68 @@ export function StudioProfilePage({
       </div>
     );
   }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              Error Loading Studio
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">{error}</p>
+            <Button
+              theme={theme}
+              variant="secondary"
+              colorMode={colorMode}
+              onClick={() => navigate('/studios')}
+            >
+              Return to Studios
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show 404 state
+  if (!studio) {
+    return (
+      <div className="container mx-auto px-4 py-24">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              Studio Not Found
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">
+              The studio you're looking for doesn't exist or has been removed.
+            </p>
+            <Button
+              theme={theme}
+              variant="secondary"
+              colorMode={colorMode}
+              onClick={() => navigate('/studios')}
+            >
+              Return to Studios
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="container mx-auto px-4 py-24">
       <div className="max-w-7xl mx-auto">
         {/* Back Button */}
-        {onBack && (
-          <button 
-            onClick={onBack}
-            className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6"
-          >
-            <ChevronLeft className="h-5 w-5 mr-1" />
-            Back to Studios
-          </button>
-        )}
+        <button 
+          onClick={handleBack}
+          className="flex items-center text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white mb-6"
+        >
+          <ChevronLeft className="h-5 w-5 mr-1" />
+          Back to Studios
+        </button>
         
         {/* Studio Header */}
         <div className="relative rounded-xl overflow-hidden mb-12">
@@ -666,7 +671,7 @@ export function StudioProfilePage({
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Projects Completed</span>
+                  <span className="text-gray-600 dark:text.gray-400">Projects Completed</span>
                   <span className="font-semibold text-gray-800 dark:text-white">
                     {studio.metrics.completedProjects}
                   </span>
@@ -737,7 +742,7 @@ export function StudioProfilePage({
                   onClick={() => setShowContactForm(false)}
                   className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
-                  <X className="h-6 w-6" />
+                  <span className="h-6 w-6">&times;</span>
                 </button>
               </div>
               
@@ -807,3 +812,5 @@ export function StudioProfilePage({
     </div>
   );
 }
+
+export default StudioProfilePage;

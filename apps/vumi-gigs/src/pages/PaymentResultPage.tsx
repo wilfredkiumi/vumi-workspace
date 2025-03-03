@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
 import { CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
 
@@ -9,7 +9,7 @@ interface PaymentResultPageProps {
 }
 
 export function PaymentResultPage({ status, type, onBack }: PaymentResultPageProps) {
-  const { theme, colorMode } = useTheme();
+  const { theme } = useTheme();
   const [paymentDetails, setPaymentDetails] = useState<Record<string, string>>({});
   
   useEffect(() => {

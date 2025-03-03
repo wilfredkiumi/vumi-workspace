@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
-import { X, DollarSign } from 'lucide-react';
+import {  X , DollarSign } from 'lucide-react';
 import { usePayment } from '../hooks/usePayment';
 import { Creator } from '../models';
 
@@ -11,7 +11,7 @@ interface TipCreatorModalProps {
 }
 
 export function TipCreatorModal({ creator, onClose, onSuccess }: TipCreatorModalProps) {
-  const { theme, colorMode } = useTheme();
+  const { theme } = useTheme();
   const { loading, createTip, redirectToCheckout } = usePayment();
   
   const [amount, setAmount] = useState<number>(5);

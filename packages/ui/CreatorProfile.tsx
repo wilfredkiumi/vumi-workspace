@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
-import { 
+import { useState  } from 'react';
+import {   
   Briefcase, 
   MapPin, 
   Star, 
   Check, 
-  Award, 
-  Clock, 
-  DollarSign, 
   MessageSquare,
-  Globe,
   Twitter,
   Instagram,
   Linkedin,
@@ -17,20 +13,15 @@ import {
   Facebook,
   ExternalLink,
   Users,
-  Camera,
-  Video,
-  Mic,
-  Zap,
-  Lock
-} from 'lucide-react';
+  Mic
+, Globe, Award, Clock, Camera, Video, Lock, DollarSign  } from 'lucide-react';
 import { Creator, TabProps, ProfileMode } from './types';
 import { Button, Card } from './index';
-import { ThemeType, ColorMode } from './index';
 
 interface CreatorProfileProps {
+  colorMode?: string;
+  theme?: string;
   creator: Creator;
-  theme: ThemeType;
-  colorMode: ColorMode;
   onContact?: (creatorId: string) => void;
   onHire?: (creatorId: string) => void;
   onUpgrade?: (creatorId: string) => void;
@@ -86,13 +77,13 @@ const getProfileModeBadge = (mode: ProfileMode) => {
 };
 
 export function CreatorProfile({ 
-  creator, 
-  theme, 
-  colorMode,
+  
+  
+  creator,
   onContact,
   onHire,
   onUpgrade
-}: CreatorProfileProps) {
+, theme = "gigs", colorMode = "light" }: CreatorProfileProps) {
   const [activeTab, setActiveTab] = useState(0);
   
   const handleContact = () => {
@@ -207,7 +198,7 @@ export function CreatorProfile({
   ];
   
   // Add creator type specific tab
-  if (creator.creatorType === 'influencer' && creator.platforms && creator.contentTypes) {
+  if (creator.creatorType === 'influencer' && (creator as any).platforms && (creator as any).contentTypes) {
     tabs.push({
       label: 'Audience',
       icon: <Users className="h-5 w-5" />,
@@ -219,11 +210,11 @@ export function CreatorProfile({
               <div className="flex items-center justify-between">
                 <span className="text-gray-600 dark:text-gray-300">Total Followers</span>
                 <span className="text-xl font-bold text-gray-800 dark:text-white">
-                  {creator.audienceSize && creator.audienceSize > 1000000 
-                    ? `${(creator.audienceSize / 1000000).toFixed(1)}M` 
-                    : creator.audienceSize && creator.audienceSize > 1000 
-                      ? `${(creator.audienceSize / 1000).toFixed(1)}K` 
-                      : creator.audienceSize}
+                  {(creator as any).audienceSize && (creator as any).audienceSize > 1000000 
+                    ? `${((creator as any).audienceSize / 1000000).toFixed(1)}M` 
+                    : (creator as any).audienceSize && (creator as any).audienceSize > 1000 
+                      ? `${((creator as any).audienceSize / 1000).toFixed(1)}K` 
+                      : (creator as any).audienceSize}
                 </span>
               </div>
             </div>
@@ -232,7 +223,7 @@ export function CreatorProfile({
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Platforms</h3>
             <div className="flex flex-wrap gap-2">
-              {creator.platforms.map((platform, index) => (
+              {(creator as any).platforms?.map((platform: string, index: number) => (
                 <span 
                   key={index} 
                   className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm flex items-center"
@@ -247,7 +238,7 @@ export function CreatorProfile({
           <div>
             <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Content Types</h3>
             <div className="flex flex-wrap gap-2">
-              {creator.contentTypes.map((type, index) => {
+              {(creator as any).contentTypes?.map((type: string, index: number) => {
                 let icon;
                 switch(type.toLowerCase()) {
                   case 'photo':
@@ -278,7 +269,7 @@ export function CreatorProfile({
         </div>
       )
     });
-  } else if (creator.creatorType === 'crew' && creator.teamSize && creator.equipmentOwned && creator.specializations) {
+  } else if (creator.creatorType === 'crew' && (creator as any).teamSize && (creator as any).equipmentOwned && (creator as any).specializations) {
     tabs.push({
       label: 'Crew Info',
       icon: <Users className="h-5 w-5" />,
@@ -290,7 +281,7 @@ export function CreatorProfile({
               <div className="flex items-center justify-between">
                 <span className="text-gray-600 dark:text-gray-300">Team Size</span>
                 <span className="text-xl font-bold text-gray-800 dark:text-white">
-                  {creator.teamSize} {creator.teamSize === 1 ? 'person' : 'people'}
+                  {(creator as any).teamSize} {(creator as any).teamSize === 1 ? 'person' : 'people'}
                 </span>
               </div>
             </div>
@@ -299,7 +290,7 @@ export function CreatorProfile({
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Specializations</h3>
             <div className="flex flex-wrap gap-2">
-              {creator.specializations.map((specialization, index) => (
+              {(creator as any).specializations?.map((specialization: string, index: number) => (
                 <span 
                   key={index} 
                   className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm"
@@ -313,7 +304,7 @@ export function CreatorProfile({
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Equipment</h3>
             <div className="flex flex-wrap gap-2">
-              {creator.equipmentOwned.map((equipment, index) => (
+              {(creator as any).equipmentOwned?.map((equipment: string, index: number) => (
                 <span 
                   key={index} 
                   className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg text-sm"
@@ -324,12 +315,12 @@ export function CreatorProfile({
             </div>
           </div>
           
-          {creator.availability && (
+          {(creator as any).availability && (
             <div>
               <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Availability</h3>
               <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl p-4">
                 <Clock className="h-5 w-5 mr-2 text-gray-600 dark:text-gray-400" />
-                <span className="text-gray-700 dark:text-gray-300">{creator.availability}</span>
+                <span className="text-gray-700 dark:text-gray-300">{(creator as any).availability}</span>
               </div>
             </div>
           )}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect  } from 'react';
 import { ChevronLeft } from 'lucide-react';
 import { Studio } from './types';
 import { ThemeType, ColorMode } from './index';
@@ -24,14 +24,15 @@ interface StudioProfilePageProps {
 
 export function StudioProfilePage({ 
   studioId, 
-  theme = 'gigs',
-  colorMode = 'light',
+  theme = "gigs", /* eslint-disable-line @typescript-eslint/no-unused-vars */
+  colorMode = "light", /* eslint-disable-line @typescript-eslint/no-unused-vars */
   onBack,
   onViewCreator,
   onViewProject
 }: StudioProfilePageProps) {
   const [studio, setStudio] = useState<Studio | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'projects' | 'team' | 'facilities'>('about');
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const [showContactForm, setShowContactForm] = useState(false);
   
   useEffect(() => {

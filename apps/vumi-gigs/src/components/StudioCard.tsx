@@ -1,5 +1,4 @@
-import React from 'react';
-import { MapPin, Star, CheckCircle, Users, Film, Camera, Award } from 'lucide-react';
+import {  MapPin, Star, CheckCircle, Users, Film , Award } from 'lucide-react';
 import { Studio } from '../models';
 import { ThemeType, ColorMode } from 'ui';
 
@@ -12,9 +11,7 @@ interface StudioCardProps {
 }
 
 export function StudioCard({ 
-  studio, 
-  theme, 
-  colorMode,
+  studio,
   onClick,
   compact = false
 }: StudioCardProps) {

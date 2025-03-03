@@ -1,5 +1,4 @@
-import React from 'react';
-import { Clock, DollarSign, MapPin, Star, Tag, Users } from 'lucide-react';
+import {  Clock, MapPin, Star, Tag, Users , DollarSign } from 'lucide-react';
 import { ThemeType, ColorMode } from 'ui';
 
 export interface Gig {
@@ -43,9 +42,7 @@ interface GigCardProps {
 }
 
 export function GigCard({ 
-  gig, 
-  theme, 
-  colorMode,
+  gig,
   onClick,
   compact = false
 }: GigCardProps) {

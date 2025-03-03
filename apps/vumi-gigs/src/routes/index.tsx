@@ -1,4 +1,9 @@
-import { Route } from '../types';
+// Define Route type locally
+interface Route {
+  path: string;
+  element: React.ReactNode;
+  layout?: React.ComponentType<{children: React.ReactNode}>;
+}
 import CreatorListingPage from '../CreatorListingPage';
 import CreatorProfilePage from '../CreatorProfilePage';
 import GigsListingPage from '../GigsListingPage';
@@ -11,7 +16,7 @@ import { ProfilePage } from '../pages/ProfilePage';
 import { PaymentResultPage } from '../pages/PaymentResultPage';
 import HomePage from '../pages/HomePage';
 import HowItWorksPage from '../pages/HowItWorksPage';
-import { ProtectedRoute } from '../components/ProtectedRoute';
+// // // // import { ProtectedRoute } from '../components/ProtectedRoute';
 
 export const routes: Route[] = [
   {

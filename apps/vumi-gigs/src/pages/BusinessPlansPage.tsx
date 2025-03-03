@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
-import { Check, Star, Users, Building, Shield, Zap, Globe, Award, Clock, DollarSign } from 'lucide-react';
+import { Check, Star, Users, Building, Shield , Globe , Zap } from 'lucide-react';
 import { usePayment } from '../hooks/usePayment';
 
 // Individual Plans
@@ -122,7 +122,8 @@ const businessPlans = [
 ];
 
 export function BusinessPlansPage() {
-  const { theme, colorMode } = useTheme();
+  const colorMode = "light"; // Default colorMode
+  const { theme } = useTheme();
   const { loading, createSubscription, redirectToCheckout } = usePayment();
   const [planType, setPlanType] = useState<'individual' | 'business'>('individual');
   
@@ -429,3 +430,6 @@ export function BusinessPlansPage() {
     </div>
   );
 }
+
+// Add default export
+export default BusinessPlansPage;
