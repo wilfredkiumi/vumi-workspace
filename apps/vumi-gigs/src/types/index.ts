@@ -4,6 +4,7 @@ export interface Route {
   path: string;
   component: ComponentType<any>;
   props?: Record<string, any>;
+  protected?: boolean; // Add protected flag for routes
 }
 
 export interface AppState {

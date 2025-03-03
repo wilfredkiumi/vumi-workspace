@@ -10,6 +10,8 @@ import { BusinessPlansPage } from '../pages/BusinessPlansPage';
 import { ProfilePage } from '../pages/ProfilePage';
 import { PaymentResultPage } from '../pages/PaymentResultPage';
 import HomePage from '../pages/HomePage';
+import HowItWorksPage from '../pages/HowItWorksPage';
+import { ProtectedRoute } from '../components/ProtectedRoute';
 
 export const routes: Route[] = [
   {
@@ -30,11 +32,13 @@ export const routes: Route[] = [
   },
   {
     path: '/gig/:id',
-    component: GigDetailPage
+    component: GigDetailPage,
+    protected: true // Protect gig detail page for proposals
   },
   {
     path: '/post-gig',
-    component: PostGigForm
+    component: PostGigForm,
+    protected: true // Protect post gig page
   },
   {
     path: '/studios',
@@ -50,16 +54,23 @@ export const routes: Route[] = [
   },
   {
     path: '/profile',
-    component: ProfilePage
+    component: ProfilePage,
+    protected: true // Protect profile page
+  },
+  {
+    path: '/how-it-works',
+    component: HowItWorksPage
   },
   {
     path: '/payment/success',
     component: PaymentResultPage,
-    props: { status: 'success' }
+    props: { status: 'success' },
+    protected: true // Protect payment pages
   },
   {
     path: '/payment/cancel',
     component: PaymentResultPage,
-    props: { status: 'cancel' }
+    props: { status: 'cancel' },
+    protected: true
   }
 ];

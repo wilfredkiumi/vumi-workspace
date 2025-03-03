@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { signIn, signUp, confirmSignUp, signOut, getCurrentUser, fetchAuthSession, resetPassword, confirmResetPassword } from '@aws-amplify/auth';
+import { signIn, signUp, confirmSignUp, signOut, getCurrentUser, fetchAuthSession } from '@aws-amplify/auth';
 import { Hub } from '@aws-amplify/core';
 import { userApi } from '../services/workspaceApi';
 import { User } from '../models';

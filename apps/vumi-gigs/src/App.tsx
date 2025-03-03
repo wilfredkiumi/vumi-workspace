@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ThemeProvider, Header, Footer } from 'ui';
 import { AppProvider, useApp } from './context/AppContext';
+import { AuthProvider } from './contexts/AuthContext';
+import { AuthModal } from './components/auth/AuthModal';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { routes } from './routes';
 
 function AppContent() {
   const { state, dispatch } = useApp();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleLogin = () => {
+    setShowAuthModal(true);
+  };
+
+  const handleAuthSuccess = () => {
+    setShowAuthModal(false);
     dispatch({ type: 'LOGIN', payload: { userName: 'Jane Smith' } });
   };
 
@@ -94,6 +103,17 @@ function AppContent() {
     }
   };
 
+  const renderComponent = () => {
+    if (currentRoute?.protected) {
+      return (
+        <ProtectedRoute>
+          <CurrentComponent {...getComponentProps()} />
+        </ProtectedRoute>
+      );
+    }
+    return <CurrentComponent {...getComponentProps()} />;
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header 
@@ -106,10 +126,17 @@ function AppContent() {
       />
       
       <main className="flex-1">
-        <CurrentComponent {...getComponentProps()} />
+        {renderComponent()}
       </main>
       
       <Footer />
+
+      {showAuthModal && (
+        <AuthModal
+          onClose={() => setShowAuthModal(false)}
+          onSuccess={handleAuthSuccess}
+        />
+      )}
     </div>
   );
 }
@@ -117,9 +144,11 @@ function AppContent() {
 function App() {
   return (
     <ThemeProvider initialTheme="gigs">
-      <AppProvider>
-        <AppContent />
-      </AppProvider>
+      <AuthProvider>
+        <AppProvider>
+          <AppContent />
+        </AppProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

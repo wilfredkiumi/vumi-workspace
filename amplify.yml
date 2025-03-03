@@ -15,4 +15,5 @@ frontend:
     paths:
       - node_modules/**/*
       - apps/vumi-gigs/node_modules/**/*
+      - apps/vumi-showcase/node_modules/**/*
       - packages/ui/node_modules/**/*
