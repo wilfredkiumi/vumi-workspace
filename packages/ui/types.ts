@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+// This file contains the data models for your application
 
 export enum ProfileMode {
   BASIC = "basic",
@@ -40,6 +40,61 @@ export interface Portfolio {
   projectUrl: string;
 }
 
+export interface Studio {
+  id: string;
+  name: string;
+  description: string;
+  logo?: string;
+  coverImage?: string;
+  location: Location;
+  industry: string[];
+  services: string[];
+  equipment?: string[];
+  facilities?: string[];
+  teamMembers: {
+    id: string;
+    name: string;
+    role: string;
+    profileImage?: string;
+    bio?: string;
+    creatorId?: string; // Link to creator profile if they have one
+  }[];
+  projects: {
+    id: string;
+    title: string;
+    description: string;
+    thumbnail: string;
+    category: string;
+    completionDate?: string;
+  }[];
+  showcases?: {
+    id: string;
+    title: string;
+    description: string;
+    thumbnail: string;
+    date: string;
+  }[];
+  contacts: {
+    email: string;
+    phone?: string;
+    website?: string;
+    socialMedia?: {
+      platform: string;
+      url: string;
+    }[];
+  };
+  metrics: {
+    rating: number;
+    completedProjects: number;
+    reviews: number;
+  };
+  verified: boolean;
+  featured: boolean;
+  plan: 'basic' | 'pro' | 'premium';
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Creator {
   id: string;
   workspaceId?: string;
@@ -48,7 +103,6 @@ export interface Creator {
   bio: string;
   profileImage?: string;
   coverImage?: string;
-  avatar?: string;
   location: Location;
   categories: string[];
   skills: string[];
@@ -60,44 +114,10 @@ export interface Creator {
   featured: boolean;
   creatorType: 'influencer' | 'crew';
   mode: ProfileMode;
-  followers?: number;
-  following?: number;
-  isAvailableForHire?: boolean;
-  freelanceStatus?: boolean;
+  isAvailableForHire: boolean;
+  freelanceStatus: boolean;
   fulltimeStatus?: boolean;
-  socialMediaLinks?: {
-    youtube?: string;
-    linkedin?: string;
-    facebook?: string;
-    twitter?: string;
-  };
-  // Influencer specific fields
-  audienceSize?: number;
-  platforms?: string[];
-  contentTypes?: string[];
-  // Crew specific fields
-  teamSize?: number;
-  equipmentOwned?: string[];
-  specializations?: string[];
-  availability?: string;
-  // Projects related fields
-  projects?: Project[];
-  showcases?: Showcase[];
-  // Additional fields
-  previousClients?: string[];
-  preferredProjectTypes?: string[];
-  awards?: {
-    title: string;
-    organization: string;
-    year: string;
-    description?: string;
-  }[];
-  education?: {
-    degree: string;
-    institution: string;
-    year: string;
-    description?: string;
-  }[];
+  studioId?: string; // Link to studio if they're part of one
 }
 
 export interface NavigationItem {
@@ -184,4 +204,28 @@ export interface CreatorFilter {
   cities: string[];
   creatorType: 'all' | 'influencer' | 'crew';
   profileMode?: ProfileMode;
+}
+
+export interface StudioFilter {
+  industries: string[];
+  services: string[];
+  countries: string[];
+  cities: string[];
+  plan?: 'basic' | 'pro' | 'premium';
+  verified?: boolean;
+  featured?: boolean;
+}
+
+export interface StudioPlan {
+  id: string;
+  name: string;
+  price: number;
+  billingPeriod: 'monthly' | 'yearly';
+  description: string;
+  features: PlanFeature[];
+  serviceLimit: number;
+  teamMemberLimit: number;
+  projectLimit: number;
+  popular?: boolean;
+  recommended?: boolean;
 }

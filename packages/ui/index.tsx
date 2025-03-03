@@ -9,6 +9,9 @@ export { CreatorProfile } from './CreatorProfile';
 export { CreatorPlans } from './CreatorPlans';
 export { ProjectCard } from './ProjectCard';
 export { ShowcaseCard } from './ShowcaseCard';
+export { StudioCard } from './StudioCard';
+export { StudioProfilePage } from './StudioProfilePage';
+export { StudiosListingPage } from './StudiosListingPage';
 export * from './types';
 
 // Define ThemeType here to ensure it's available
@@ -72,6 +75,7 @@ export interface ButtonProps {
   theme?: ThemeType;
   colorMode?: ColorMode;
   type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }
 
 export function Button({ 
@@ -81,7 +85,8 @@ export function Button({
   variant = 'primary',
   theme = 'gigs',
   colorMode = 'light',
-  type = 'button'
+  type = 'button',
+  disabled = false
 }: ButtonProps) {
   const themeStyles = variant === 'primary' 
     ? THEMES[theme].buttonPrimary 
@@ -89,12 +94,14 @@ export function Button({
   
   // Add dark mode styles if needed
   const modeStyles = colorMode === 'dark' ? 'dark:bg-opacity-90 dark:hover:bg-opacity-100' : '';
+  const disabledStyles = disabled ? 'opacity-50 cursor-not-allowed' : '';
   
   return (
     <button
       type={type}
-      className={`px-4 py-2 rounded-lg font-medium transition-colors ${themeStyles} ${modeStyles} ${className}`}
+      className={`px-4 py-2 rounded-lg font-medium transition-colors ${themeStyles} ${modeStyles} ${disabledStyles} ${className}`}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </button>
@@ -106,21 +113,27 @@ export interface CardProps {
   className?: string;
   theme?: ThemeType;
   colorMode?: ColorMode;
+  onClick?: () => void;
 }
 
 export function Card({ 
   children, 
   className = '', 
   theme = 'gigs',
-  colorMode = 'light' 
+  colorMode = 'light',
+  onClick
 }: CardProps) {
   const baseClasses = 'rounded-xl shadow-md p-6';
   const modeClasses = colorMode === 'dark' 
     ? 'bg-gray-800 text-white' 
     : 'bg-white text-gray-800';
+  const clickableClasses = onClick ? 'cursor-pointer hover:shadow-lg transition-shadow' : '';
   
   return (
-    <div className={`${baseClasses} ${modeClasses} ${className}`}>
+    <div 
+      className={`${baseClasses} ${modeClasses} ${clickableClasses} ${className}`}
+      onClick={onClick}
+    >
       {children}
     </div>
   );
@@ -302,7 +315,7 @@ export function Header({
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleNavigation('/find-gigs');
+                  handleNavigation('/gigs');
                 }}
                 className="font-medium transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
@@ -327,6 +340,16 @@ export function Header({
                 className="font-medium transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
               >
                 Creators
+              </a>
+              <a 
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/studios');
+                }}
+                className="font-medium transition-colors text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+              >
+                Studios
               </a>
               <a 
                 href="#"
@@ -497,7 +520,7 @@ export function Header({
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleNavigation('/find-gigs');
+                    handleNavigation('/gigs');
                   }}
                   className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
@@ -522,6 +545,16 @@ export function Header({
                   className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   Creators
+                </a>
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavigation('/studios');
+                  }}
+                  className="block px-3 py-2 rounded-lg text-base font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
+                  Studios
                 </a>
                 <a 
                   href="#"
