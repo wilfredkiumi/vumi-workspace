@@ -9,6 +9,9 @@
     "dist"
   ],
   "scripts": {
+    "dev": "vite",
+    "dev:gigs": "cd ../../apps/vumi-gigs && npm run dev",
+    "dev:showcase": "cd ../../apps/vumi-showcase && npm run dev",
     "build:vite": "vite build",
     "build:types": "tsc --emitDeclarationOnly",
     "build": "npm run build:vite && npm run build:types",
@@ -20,8 +23,8 @@
     "@aws-amplify/auth": "^5.6.6",
     "aws-amplify": "^5.3.11",
     "lucide-react": "^0.344.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "react-router-dom": "^6.15.0",
     "uuid": "^9.0.1"
   },
@@ -30,13 +33,14 @@
     "@types/react-dom": "18.2.0",
     "eslint": "^8.49.0",
     "eslint-config-custom": "*",
+    "prettier": "^3.5.3",
     "tsconfig": "*",
     "tsup": "^7.2.0",
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
     "ui": "file:../ui"
   }
 }
