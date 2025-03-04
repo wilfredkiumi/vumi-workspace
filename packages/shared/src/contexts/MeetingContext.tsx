@@ -1,65 +1,40 @@
-import React, { createContext, useContext, useReducer, ReactNode } from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import type { Meeting } from '../types/meeting';
 
-interface MeetingState {
-  activeMeetingId: string | null;
-  isInMeeting: boolean;
-  participants: string[];
+interface MeetingContextType {
+  meetings: Meeting[];
+  addMeeting: (meeting: Meeting) => void;
+  removeMeeting: (meetingId: string) => void;
 }
 
-type MeetingAction =
-  | { type: 'JOIN_MEETING'; payload: string }
-  | { type: 'LEAVE_MEETING' }
-  | { type: 'UPDATE_PARTICIPANTS'; payload: string[] };
+const MeetingContext = createContext<MeetingContextType>({
+  meetings: [],
+  addMeeting: () => {},
+  removeMeeting: () => {}
+});
 
-const initialState: MeetingState = {
-  activeMeetingId: null,
-  isInMeeting: false,
-  participants: []
-};
+export function MeetingProvider({ children }: { children: React.ReactNode }) {
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
 
-const MeetingContext = createContext<{
-  state: MeetingState;
-  dispatch: React.Dispatch<MeetingAction>;
-} | undefined>(undefined);
+  const addMeeting = (meeting: Meeting) => {
+    setMeetings(prev => [...prev, meeting]);
+  };
 
-function meetingReducer(state: MeetingState, action: MeetingAction): MeetingState {
-  switch (action.type) {
-    case 'JOIN_MEETING':
-      return {
-        ...state,
-        activeMeetingId: action.payload,
-        isInMeeting: true
-      };
-    case 'LEAVE_MEETING':
-      return {
-        ...state,
-        activeMeetingId: null,
-        isInMeeting: false,
-        participants: []
-      };
-    case 'UPDATE_PARTICIPANTS':
-      return {
-        ...state,
-        participants: action.payload
-      };
-    default:
-      return state;
-  }
-}
+  const removeMeeting = (meetingId: string) => {
+    setMeetings(prev => prev.filter(m => m.id !== meetingId));
+  };
 
-export function MeetingProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(meetingReducer, initialState);
   return (
-    <MeetingContext.Provider value={{ state, dispatch }}>
+    <MeetingContext.Provider value={{ meetings, addMeeting, removeMeeting }}>
       {children}
     </MeetingContext.Provider>
   );
 }
 
-export function useMeeting() {
+export function useMeetingContext() {
   const context = useContext(MeetingContext);
-  if (context === undefined) {
-    throw new Error('useMeeting must be used within a MeetingProvider');
+  if (!context) {
+    throw new Error('useMeetingContext must be used within a MeetingProvider');
   }
   return context;
 }

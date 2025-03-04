@@ -1,35 +1,22 @@
-import { AuthUser } from '../contexts/AuthContext.jsx';
+import { AuthUser } from '../contexts/AuthContext';
 
 export interface Meeting {
   id: string;
-  gigId: string;
   title: string;
-  createdBy: {
-    id: string;
-    name: string;
-    avatar: string;
-  };
-  participants: {
-    id: string;
-    name: string;
-    avatar: string;
-    role: 'host' | 'participant';
-  }[];
-  scheduledFor: string;
-  duration: number; // in minutes
+  startTime: Date;
+  endTime?: Date;
+  participants: string[];
+  hostId: string;
   status: 'scheduled' | 'in-progress' | 'completed' | 'cancelled';
   meetingType: 'interview' | 'project-discussion' | 'review';
   description?: string;
   recording?: boolean;
   settings: {
     allowChat: boolean;
-    allowScreenSharing: boolean;
+    allowScreenShare: boolean;
     muteOnEntry: boolean;
-    waitingRoom: boolean;
-    maxParticipants: number;
+    requireApproval: boolean;
   };
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface MeetingParticipant {
@@ -38,10 +25,10 @@ export interface MeetingParticipant {
   role: 'host' | 'participant';
   joinedAt?: string;
   leftAt?: string;
-  devices?: {
-    audio?: boolean;
-    video?: boolean;
-    screen?: boolean;
+  devices: {
+    audio: boolean;
+    video: boolean;
+    screen: boolean;
   };
 }
 

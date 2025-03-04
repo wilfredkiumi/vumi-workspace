@@ -2,11 +2,13 @@
   "name": "@vumi/shared",
   "version": "0.1.0",
   "description": "Shared components and utilities for Vumi workspace apps",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/vumi-shared.umd.js",
+  "module": "dist/vumi-shared.es.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build:simple": "node build-simple.js",
     "build": "vite build",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "clean": "rimraf dist",
