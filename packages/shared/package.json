@@ -4,12 +4,14 @@
   "description": "Shared components and utilities for Vumi workspace apps",
   "main": "dist/vumi-shared.umd.js",
   "module": "dist/vumi-shared.es.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
+    "build:vite": "vite build",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build": "npm run build:vite && npm run build:types",
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "clean": "rimraf dist",
     "prebuild": "npm run clean"
@@ -24,10 +26,8 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "@types/uuid": "^9.0.7",
+    "@types/react": "18.2.0",
+    "@types/react-dom": "18.2.0",
     "eslint": "^8.49.0",
     "eslint-config-custom": "*",
     "tsconfig": "*",
@@ -37,6 +37,6 @@
   "peerDependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "ui": "*"
+    "ui": "file:../ui"
   }
 }

@@ -3,62 +3,21 @@
  * but are not available in the browser environment.
  */
 
-// Add global to window
+// Minimal polyfills needed for AWS Amplify
 if (typeof window !== 'undefined') {
+  // Add global to window
   // @ts-ignore
   window.global = window;
-}
 
-// Add process.env if it doesn't exist
-if (typeof process === 'undefined') {
+  // Add process.env if it doesn't exist
   // @ts-ignore
   window.process = { env: {} };
-}
 
-// Add Buffer if it doesn't exist
-if (typeof window !== 'undefined' && typeof window.Buffer === 'undefined') {
+  // Add basic Buffer shim
   // @ts-ignore
   window.Buffer = {
-    isBuffer: () => false,
-  };
-}
-
-/**
- * This file contains polyfills that might be needed for older browsers.
- * Currently it's just a placeholder, but you can add any needed polyfills here.
- */
-
-// Ensure Array.prototype.includes is available
-if (!Array.prototype.includes) {
-  Array.prototype.includes = function(searchElement, fromIndex) {
-    if (this == null) {
-      throw new TypeError('"this" is null or not defined');
-    }
-
-    const o = Object(this);
-    const len = o.length >>> 0;
-    
-    if (len === 0) {
+    isBuffer: function(_: unknown): _ is Buffer {
       return false;
     }
-    
-    const n = fromIndex | 0;
-    let k = Math.max(n >= 0 ? n : len + n, 0);
-    
-    while (k < len) {
-      if (o[k] === searchElement) {
-        return true;
-      }
-      k++;
-    }
-    
-    return false;
   };
 }
-
-// Add more polyfills as needed
-
-// Export a dummy object to make TypeScript happy
-export const polyfills = {
-  loaded: true
-};

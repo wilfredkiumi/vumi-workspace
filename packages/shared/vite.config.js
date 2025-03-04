@@ -12,13 +12,28 @@ export default defineConfig({
       fileName: (format) => `vumi-shared.${format}.js`
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'aws-amplify',
+        '@aws-amplify/auth',
+        'react-router-dom'
+      ],
       output: {
         globals: {
           react: 'React',
-          'react-dom': 'ReactDOM'
+          'react-dom': 'ReactDOM',
+          'react/jsx-runtime': 'jsxRuntime',
+          'aws-amplify': 'Amplify',
+          '@aws-amplify/auth': 'Auth',
+          'react-router-dom': 'ReactRouterDOM'
         }
       }
-    }
+    },
+    sourcemap: true,
+    minify: 'esbuild',
+    outDir: 'dist',
+    emptyOutDir: true
   }
 });

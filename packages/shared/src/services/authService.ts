@@ -1,9 +1,7 @@
 import { Amplify, Auth } from 'aws-amplify';
 
-// Keep track of whether Amplify has been configured
 let isAmplifyConfigured = false;
 
-// Configure Amplify with Cognito settings
 export function configureAuth(config: {
   region?: string;
   userPoolId?: string;
@@ -23,7 +21,6 @@ export function configureAuth(config: {
       identityPoolId: config.identityPoolId ? '***' : 'undefined'
     });
 
-    // Check if we have real credentials and they look valid
     const hasValidCredentials = 
       !!config.region && 
       !!config.userPoolId && 
@@ -33,12 +30,10 @@ export function configureAuth(config: {
     
     if (!hasValidCredentials) {
       console.warn('Invalid or missing Auth configuration parameters. Using mock authentication.');
-      // Mark as configured so we don't try again
       isAmplifyConfigured = true;
       return;
     }
     
-    // Proceed with Amplify configuration
     console.log('Configuring Auth with credentials from environment variables');
     
     try {
@@ -46,11 +41,9 @@ export function configureAuth(config: {
         region: config.region,
         userPoolId: config.userPoolId,
         userPoolWebClientId: config.userPoolWebClientId,
-        // Change to USER_SRP_AUTH flow which is the default and widely enabled
         authenticationFlowType: 'USER_SRP_AUTH'
       };
       
-      // Only add identity pool if it's provided and looks valid
       if (config.identityPoolId && config.identityPoolId.includes(':')) {
         authConfig.identityPoolId = config.identityPoolId;
         console.log('Including Identity Pool ID in Auth configuration');
@@ -76,41 +69,11 @@ export function configureAuth(config: {
   }
 }
 
-// Determine if we're in development mode
-const isDevelopment = () => {
-  return process.env.NODE_ENV === 'development' || 
-    (typeof import.meta !== 'undefined' && import.meta.env?.DEV === true);
-};
-
-// Create a mock user for development
-const createMockUser = (email?: string) => {
-  return {
-    username: 'test-user',
-    attributes: {
-      email: email || 'test@example.com',
-      name: 'Demo User',
-      sub: '123456789',
-      picture: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-    }
-  };
-};
-
-// Create a mock session for development
-const createMockSession = () => {
-  return {
-    getIdToken: () => ({
-      getJwtToken: () => 'mock-jwt-token-' + Date.now()
-    })
-  };
-};
-
-// AuthService class
 class AuthService {
   private static instance: AuthService;
   
   private constructor() {}
   
-  // Singleton pattern
   public static getInstance(): AuthService {
     if (!AuthService.instance) {
       AuthService.instance = new AuthService();
@@ -118,7 +81,6 @@ class AuthService {
     return AuthService.instance;
   }
   
-  // Check if Auth is configured
   private checkConfig() {
     if (!isAmplifyConfigured) {
       console.warn('Auth is not configured. Please make sure configureAuth() is called with valid credentials.');
@@ -126,7 +88,6 @@ class AuthService {
     return isAmplifyConfigured;
   }
 
-  // Sign up
   public async signUp(username: string, password: string, attributes?: Record<string, any>) {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -145,7 +106,6 @@ class AuthService {
     }
   }
   
-  // Confirm sign up
   public async confirmSignUp(username: string, code: string) {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -159,7 +119,6 @@ class AuthService {
     }
   }
   
-  // Sign in
   public async signIn(username: string, password: string) {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -174,7 +133,6 @@ class AuthService {
     }
   }
   
-  // Sign out
   public async signOut() {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -188,7 +146,6 @@ class AuthService {
     }
   }
   
-  // Get current user
   public async getCurrentUser() {
     if (!this.checkConfig()) {
       console.warn('Auth not properly configured, cannot get current user');
@@ -200,7 +157,6 @@ class AuthService {
       return this.formatUser(user);
     } catch (error) {
       if (error === 'No current user' || error === 'The user is not authenticated') {
-        // Not an error, just no authenticated user
         return null;
       }
       console.error('Error getting current user:', error);
@@ -208,11 +164,9 @@ class AuthService {
     }
   }
   
-  // Format user data
   private formatUser(user: any) {
     if (!user) return null;
     
-    // Format the user object to match our expected format
     return {
       id: user.username || user.attributes?.sub,
       username: user.username || '',
@@ -221,11 +175,9 @@ class AuthService {
       avatar: user.attributes?.picture || null,
       attributes: user.attributes || {},
       createdAt: user.createdAt || new Date().toISOString(),
-      // Add any other properties we want to expose
     };
   }
   
-  // Forgot password
   public async forgotPassword(username: string) {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -239,7 +191,6 @@ class AuthService {
     }
   }
   
-  // Reset password
   public async resetPassword(username: string, code: string, newPassword: string) {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -253,7 +204,6 @@ class AuthService {
     }
   }
   
-  // Change password
   public async changePassword(oldPassword: string, newPassword: string) {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -268,7 +218,6 @@ class AuthService {
     }
   }
   
-  // Update user attributes
   public async updateUserAttributes(attributes: Record<string, any>) {
     if (!this.checkConfig()) {
       throw new Error('Auth not configured');
@@ -285,5 +234,15 @@ class AuthService {
   }
 }
 
-// Export singleton instance
-export const authService = AuthService.getInstance();
+// Export singleton instance with bound methods
+export const authService = {
+  signUp: AuthService.getInstance().signUp.bind(AuthService.getInstance()),
+  confirmSignUp: AuthService.getInstance().confirmSignUp.bind(AuthService.getInstance()),
+  signIn: AuthService.getInstance().signIn.bind(AuthService.getInstance()),
+  signOut: AuthService.getInstance().signOut.bind(AuthService.getInstance()),
+  getCurrentUser: AuthService.getInstance().getCurrentUser.bind(AuthService.getInstance()),
+  forgotPassword: AuthService.getInstance().forgotPassword.bind(AuthService.getInstance()),
+  resetPassword: AuthService.getInstance().resetPassword.bind(AuthService.getInstance()),
+  changePassword: AuthService.getInstance().changePassword.bind(AuthService.getInstance()),
+  updateUserAttributes: AuthService.getInstance().updateUserAttributes.bind(AuthService.getInstance())
+};
