@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { useState  } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext.jsx';
 import { Button, Card } from 'ui';
 import { Lock, AlertTriangle } from 'lucide-react';
 

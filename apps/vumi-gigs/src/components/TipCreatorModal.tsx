@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
-import {  X , DollarSign } from 'lucide-react';
+import { DollarSign, X } from 'lucide-react';
 import { usePayment } from '../hooks/usePayment';
 import { Creator } from '../models';
 

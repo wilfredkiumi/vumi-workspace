@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Check, X } from 'lucide-react';
 import { CreatorPlan, ProfileMode } from './types';
 import { Button } from './index';

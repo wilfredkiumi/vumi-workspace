@@ -1,4 +1,4 @@
-import { AuthUser } from '../contexts/AuthContext';
+import { AuthUser } from '../contexts/AuthContext.jsx';
 
 export interface Meeting {
   id: string;

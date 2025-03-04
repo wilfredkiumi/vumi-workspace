@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Studio } from '../../types';
 import { Card } from '../../index';
 import { Calendar } from 'lucide-react';

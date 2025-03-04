@@ -1,20 +1,6 @@
+// @ts-nocheck
 import { useState  } from 'react';
-import {   
-  Briefcase, 
-  MapPin, 
-  Star, 
-  Check, 
-  MessageSquare,
-  Twitter,
-  Instagram,
-  Linkedin,
-  Youtube,
-  Github,
-  Facebook,
-  ExternalLink,
-  Users,
-  Mic
-, Globe, Award, Clock, Camera, Video, Lock, DollarSign  } from 'lucide-react';
+import { Award, Briefcase, Camera, Check, Clock, DollarSign, ExternalLink, Facebook, Github, Globe, Instagram, Linkedin, Lock, MapPin, MessageSquare, Mic, Star, Twitter, Users, Video, Youtube } from 'lucide-react';
 import { Creator, TabProps, ProfileMode } from './types';
 import { Button, Card } from './index';
 

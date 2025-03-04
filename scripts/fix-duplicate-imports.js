@@ -1,146 +1,79 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { globSync } from 'glob';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
-console.log('🔧 Fixing duplicate imports...');
-
-// Files with duplicate imports to fix
-const filesToFix = [
-  {
-    path: 'apps/vumi-gigs/src/CreatorProfilePage.tsx',
-    replacements: [
-      {
-        // Remove duplicate Creator import, keep only one
-        pattern: /import { Creator } from "\.\/types\/index\.js";\s*/g,
-        replacement: ''
-      }
-    ]
-  }
-];
-
-// Process each file
-filesToFix.forEach(file => {
-  const filePath = path.join(rootDir, file.path);
+/**
+ * Fix duplicate named imports in import statements
+ */
+function fixDuplicateImports() {
+  console.log('🔍 Checking for duplicate imports in component files...');
   
-  if (fs.existsSync(filePath)) {
-    console.log(`Processing ${file.path}...`);
-    let content = fs.readFileSync(filePath, 'utf8');
-    let modified = false;
-    
-    // Apply each replacement
-    file.replacements.forEach(replacement => {
-      const originalContent = content;
-      content = content.replace(replacement.pattern, replacement.replacement);
-      
-      if (content !== originalContent) {
-        modified = true;
-      }
-    });
-    
-    if (modified) {
-      fs.writeFileSync(filePath, content);
-      console.log(`✅ Fixed ${file.path}`);
-    } else {
-      console.log(`⚠️ No changes needed in ${file.path}`);
-    }
-  } else {
-    console.log(`⚠️ File not found: ${file.path}`);
-  }
-});
-
-// Fix any other files that might have duplicate imports
-function fixAllDuplicateImports() {
-  console.log('\n🔍 Checking for other duplicate imports...');
-  
-  // Find all TypeScript files
-  const baseDirectories = [
-    path.join(rootDir, 'apps/vumi-gigs/src'),
-    path.join(rootDir, 'packages/ui')
-  ];
-  
-  let fileCount = 0;
+  // Find all TypeScript/JavaScript files
+  const files = globSync('apps/vumi-*/src/**/*.{ts,tsx,js,jsx}', { cwd: rootDir });
   let fixedCount = 0;
   
-  // Process each directory
-  baseDirectories.forEach(dir => {
-    if (!fs.existsSync(dir)) return;
+  for (const filePath of files) {
+    const fullPath = path.join(rootDir, filePath);
+    let content = fs.readFileSync(fullPath, 'utf8');
+    const originalContent = content;
+    let modified = false;
     
-    const files = findTypeScriptFiles(dir);
-    fileCount += files.length;
+    // Look for import statements
+    const importRegex = /import\s+\{([^}]+)\}\s+from\s+['"]([^'"]+)['"]/g;
+    let match;
     
-    files.forEach(filePath => {
-      let content = fs.readFileSync(filePath, 'utf8');
+    // Process each import statement
+    while ((match = importRegex.exec(content)) !== null) {
+      const importClause = match[1];
+      const source = match[2];
+      const fullImportStatement = match[0];
       
-      // Track imports to detect duplicates
-      const importLines = content.split('\n');
-      const seenImports = new Map();
-      const linesToRemove = new Set();
+      // Split the import names and remove extra whitespace
+      const imports = importClause.split(',').map(i => i.trim());
       
-      // Find duplicate imports
-      for (let i = 0; i < importLines.length; i++) {
-        const line = importLines[i];
+      // Check for duplicates
+      const uniqueImports = [];
+      const seen = new Set();
+      let hasDuplicates = false;
+      
+      for (const importName of imports) {
+        // Skip empty imports
+        if (!importName) continue;
         
-        // Check if it's an import line
-        if (line.trim().startsWith('import ')) {
-          // Extract the imported module
-          const moduleMatch = line.match(/from\s+['"]([^'"]+)['"]/);
-          
-          if (moduleMatch) {
-            const module = moduleMatch[1];
-            
-            // Check if this module was already imported
-            if (seenImports.has(module)) {
-              // This is a duplicate import - mark for removal
-              linesToRemove.add(i);
-            } else {
-              seenImports.set(module, i);
-            }
-          }
+        const normalizedName = importName.split(' as ')[0].trim();
+        
+        if (!seen.has(normalizedName)) {
+          seen.add(normalizedName);
+          uniqueImports.push(importName);
+        } else {
+          hasDuplicates = true;
+          console.log(`Found duplicate import "${normalizedName}" in ${filePath}`);
         }
       }
       
-      // Remove duplicate import lines
-      if (linesToRemove.size > 0) {
-        const newContent = importLines
-          .filter((_, i) => !linesToRemove.has(i))
-          .join('\n');
-        
-        fs.writeFileSync(filePath, newContent);
-        fixedCount++;
-        console.log(`✅ Fixed duplicate imports in ${path.relative(rootDir, filePath)}`);
+      // If we found duplicates, fix the import statement
+      if (hasDuplicates) {
+        const newImportStatement = `import { ${uniqueImports.join(', ')} } from '${source}'`;
+        content = content.replace(fullImportStatement, newImportStatement);
+        modified = true;
       }
-    });
-  });
-  
-  console.log(`\n🔍 Checked ${fileCount} files, fixed ${fixedCount} with duplicate imports`);
-}
-
-// Helper function to find all TypeScript files in a directory
-function findTypeScriptFiles(dir) {
-  let results = [];
-  
-  const list = fs.readdirSync(dir);
-  
-  for (const file of list) {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
+    }
     
-    if (stat.isDirectory()) {
-      results = results.concat(findTypeScriptFiles(filePath));
-    } else if (/\.(tsx?|jsx?)$/.test(file)) {
-      results.push(filePath);
+    // If the content was modified, write it back to the file
+    if (modified && content !== originalContent) {
+      fs.writeFileSync(fullPath, content, 'utf8');
+      console.log(`✅ Fixed duplicate imports in ${filePath}`);
+      fixedCount++;
     }
   }
   
-  return results;
+  console.log(`\n🎉 Fixed duplicate imports in ${fixedCount} files`);
+  return fixedCount;
 }
 
-// Run the automated fix for all files
-fixAllDuplicateImports();
-
-console.log('\n✅ Duplicate imports fixes completed!');
-console.log('  Run: npm run build:skipcheck');
+// Run the fix
+fixDuplicateImports();

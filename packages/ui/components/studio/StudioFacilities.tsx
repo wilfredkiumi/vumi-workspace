@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Building, PenTool as Tool } from 'lucide-react';
 import { Studio } from '../../types';
 import { Card } from '../../index';

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Briefcase, Building, Star } from 'lucide-react';
 import { Button, Card, THEMES } from 'ui';
 

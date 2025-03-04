@@ -1,13 +1,10 @@
-import { LucideProps } from 'lucide-react';
+import React from 'react';
 
-export function TikTokIcon(props: LucideProps) {
+interface TikTokIconProps extends React.SVGProps<SVGSVGElement> {}
+
+export function TikTokIcon(props: TikTokIconProps) {
   return (
-    <svg
-      {...props}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         d="M19.32 5.5C19.39 5.51 19.47 5.51 19.55 5.51C19.52 5.51 19.45 5.51 19.37 5.5H19.32Z"
         stroke="currentColor"

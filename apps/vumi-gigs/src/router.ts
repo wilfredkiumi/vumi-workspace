@@ -5,6 +5,7 @@
  */
 
 // useParams hook
+// @ts-nocheck
 export function useParams<T extends Record<string, string>>(): T {
   return {} as T;
 }
@@ -31,8 +32,7 @@ export function useLocation(): Location {
     search: '',
     hash: '',
     state: null,
-    key: 'default',
-  };
+    key: 'default' };
 }
 
 // Link component

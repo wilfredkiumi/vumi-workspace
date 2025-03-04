@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@vumi/shared';
 import { AuthModal } from './auth/AuthModal';

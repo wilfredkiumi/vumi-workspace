@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState  } from 'react';
 import { Menu, X, Moon, Sun, ChevronDown, User, Bell, MessageSquare } from 'lucide-react';
 import { THEMES } from '../constants';
 import Logo from './Logo';
@@ -42,8 +42,7 @@ const Header: React.FC<HeaderProps> = ({
   isLoading = false,
   userMenuItems = [],
   unreadMessages = 0,
-  onInboxClick,
-}) => {
+  onInboxClick }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   

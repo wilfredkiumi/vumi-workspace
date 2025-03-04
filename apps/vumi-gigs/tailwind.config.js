@@ -3,7 +3,9 @@ export default {
   content: [
     './index.html', 
     './src/**/*.{js,ts,jsx,tsx}',
-    '../../packages/ui/**/*.{js,ts,jsx,tsx}'
+    // Fix the patterns that might match too many files
+    '../../packages/ui/src/**/*.{js,ts,jsx,tsx}', // Use src instead of everything
+    '../../packages/ui/components/**/*.{js,ts,jsx,tsx}'
   ],
   darkMode: 'class',
   theme: {

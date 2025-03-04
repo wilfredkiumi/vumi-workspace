@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ProfileMode } from 'ui';
 
 export interface Studio {

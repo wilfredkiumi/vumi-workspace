@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X } from 'lucide-react';
-import { LoginForm } from './LoginForm';
+import { LoginForm } from './LoginForm.jsx';
 import { SignupForm } from './SignupForm';
 
 type AuthModalView = 'login' | 'signup' | 'forgotPassword';

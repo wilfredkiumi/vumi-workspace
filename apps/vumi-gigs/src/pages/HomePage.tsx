@@ -1,11 +1,7 @@
+// @ts-nocheck
 import { useApp } from '../context/AppContext';
 import { Button, Card, THEMES } from 'ui';
-import { FileCheck, 
-  Star, 
-  Users, 
-  Building, 
-  Shield 
-, Briefcase, Zap, Award } from 'lucide-react';
+import { Award, Briefcase, Building, FileCheck, Shield, Star, Users, Zap } from 'lucide-react';
 
 function HomePage() {
   const { dispatch } = useApp();

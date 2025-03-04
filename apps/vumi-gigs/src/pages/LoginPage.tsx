@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 // Update import to use shared package
 import { useAuth } from '@vumi/shared';
-import { LoginForm } from '../components/auth/LoginForm';
+import { LoginForm } from '../components/auth/LoginForm.jsx';
 import { SignupForm } from '../components/auth/SignupForm';
 
 enum AuthView {

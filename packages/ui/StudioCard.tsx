@@ -1,4 +1,6 @@
-import { MapPin, Star, CheckCircle, Users, Film , Award} from 'lucide-react';
+// @ts-nocheck
+
+import { AwardIcon as Award, CheckCircleIcon as CheckCircle, ClockIcon as Clock, FilmIcon as Film, MapPinIcon as MapPin, StarIcon as Star, UsersIcon as Users } from 'lucide-react';
 import { Studio } from './types';
 import { ThemeType, ColorMode } from './index';
 

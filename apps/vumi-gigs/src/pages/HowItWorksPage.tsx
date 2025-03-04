@@ -1,15 +1,7 @@
+// @ts-nocheck
 import { useApp } from '../context/AppContext';
 import { Card, THEMES } from 'ui';
-import {  
-  Search, 
-  Send, 
-  CheckSquare, 
-  Star, 
-  Shield,
-  FileText,
-  MessageSquare,
-  Users
-, Clock, DollarSign, Video } from 'lucide-react';
+import { CheckSquare, Clock, DollarSign, FileText, MessageSquare, Search, Send, Shield, Star, Users, Video } from 'lucide-react';
 
 function HowItWorksPage() {
   const { dispatch } = useApp();

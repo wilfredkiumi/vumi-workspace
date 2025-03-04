@@ -27,8 +27,7 @@ export function debugAmplifyAuth() {
       .then(user => {
         console.log("✅ User is authenticated", {
           username: user.username,
-          hasAttributes: !!user.attributes,
-        });
+          hasAttributes: !!user.attributes });
       })
       .catch(error => {
         console.log("❌ No authenticated user", error);
@@ -38,8 +37,7 @@ export function debugAmplifyAuth() {
     Auth.currentCredentials()
       .then(credentials => {
         console.log("✅ Credentials available:", {
-          identityId: credentials.identityId ? 'Available' : 'Not available',
-        });
+          identityId: credentials.identityId ? 'Available' : 'Not available' });
       })
       .catch(error => {
         console.log("❌ No credentials available:", error);

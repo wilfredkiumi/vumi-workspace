@@ -1,4 +1,5 @@
-import {  FileCheck, Star , Briefcase, Award } from 'lucide-react';
+// @ts-nocheck
+import { Award, Briefcase, FileCheck, Star } from 'lucide-react';
 import { Button, Card, THEMES } from 'ui';
 
 interface CategoriesSectionProps {

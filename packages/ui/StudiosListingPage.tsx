@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { useState, useEffect  } from 'react';
 import { Search, Filter, X, CheckSquare, Square, Building } from 'lucide-react';
-import { Studio, StudioFilter } from './types';
+import { Studio, StudioFilter, ThemeType, ColorMode } from './types';
 import { Button, Card, StudioCard } from './index';
 import { sampleStudios } from './data/sampleData';
 

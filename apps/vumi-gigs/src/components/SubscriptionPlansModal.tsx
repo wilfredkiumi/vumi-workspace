@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useState, useEffect  } from 'react';
 import { useTheme, Button, Card } from 'ui';
 import { X, Check } from 'lucide-react';

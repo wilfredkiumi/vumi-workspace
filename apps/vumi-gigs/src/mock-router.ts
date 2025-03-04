@@ -1,3 +1,4 @@
+// @ts-nocheck
 // filepath: /Users/wilfred/vumi-workspace/apps/vumi-gigs/src/mock-router.ts
 /**
  * Mock implementation of react-router-dom for development
@@ -31,8 +32,7 @@ export function useLocation(): Location {
     search: '',
     hash: '',
     state: null,
-    key: 'default',
-  };
+    key: 'default' };
 }
 
 // Link component

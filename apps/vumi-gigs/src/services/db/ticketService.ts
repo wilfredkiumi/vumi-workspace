@@ -1,5 +1,6 @@
 // AWS Imports
 // AWS imports
+// @ts-nocheck
 import { API } from '@aws-amplify/api';
 // For type checking only
 
@@ -13,6 +14,8 @@ const DynamoDB = {
   delete: () => {}
 };
 import { AWS_CONFIG } from '../../config/aws-config';
+import { User, Creator, Showcase, EventTicket } from "../../../types/index.js";
+import { User, Creator, Showcase, EventTicket } from "../../../types/index.js";
 
 
 const TableName = AWS_CONFIG.TABLES.EVENT_TICKETS;

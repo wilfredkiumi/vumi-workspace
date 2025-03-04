@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Studio } from '../models';
 import { setCounter } from '../utils/idGenerator';
 

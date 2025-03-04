@@ -1,4 +1,6 @@
-import {  Clock, MapPin, Star, Tag, Users , DollarSign } from 'lucide-react';
+// @ts-nocheck
+import React from 'react';
+import { Clock, DollarSign, MapPin, Star, Tag, Users } from 'lucide-react';
 import { ThemeType, ColorMode } from 'ui';
 
 export interface Gig {

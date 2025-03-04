@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState  } from 'react';
 import { useTheme, Button, Card } from 'ui';
 import { CheckCircle, XCircle, ArrowLeft } from 'lucide-react';

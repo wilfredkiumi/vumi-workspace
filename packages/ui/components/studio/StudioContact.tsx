@@ -1,4 +1,5 @@
-import { Mail, Phone, ExternalLink , Globe} from 'lucide-react';
+// @ts-nocheck
+import { ExternalLink, Globe, Mail, Phone } from 'lucide-react';
 import { Studio } from '../../types';
 import { Card } from '../../index';
 

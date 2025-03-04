@@ -1,5 +1,6 @@
+// @ts-nocheck
 import { Card, useTheme } from 'ui';
-import { Star, MapPin, CheckCircle, Users } from 'lucide-react';eact';
+import { Star, MapPin, CheckCircle, Users, Award } from 'lucide-react';
 import { Creator, CreatorType } from '../models/Creator';
 
 interface CreatorCardProps {

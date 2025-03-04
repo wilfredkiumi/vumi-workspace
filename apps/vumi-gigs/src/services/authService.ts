@@ -6,8 +6,7 @@ Amplify.configure({
     region: import.meta.env.VITE_COGNITO_REGION,
     userPoolId: import.meta.env.VITE_USER_POOL_ID,
     userPoolWebClientId: import.meta.env.VITE_USER_POOL_WEB_CLIENT_ID,
-    identityPoolId: import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID,
-  }
+    identityPoolId: import.meta.env.VITE_COGNITO_IDENTITY_POOL_ID }
 });
 
 export const authService = {
@@ -30,9 +29,7 @@ export const authService = {
         password,
         attributes: {
           email,
-          ...attributes,
-        },
-      });
+          ...attributes } });
       return user;
     } catch (error) {
       console.error("Error signing up:", error);
@@ -109,5 +106,4 @@ export const authService = {
       console.error("Error changing password:", error);
       throw error;
     }
-  },
-};
+  } };

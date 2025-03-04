@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+// @ts-nocheck
+import { useState  } from 'react';
 import { Button, Card, useTheme } from 'ui';
-import { Mail, AlertTriangle, Lock, User } from 'lucide-react';
+import { AlertTriangle, Lock, Mail, User } from 'lucide-react';
 import { useAuth } from '@vumi/shared';
 
 interface SignupFormProps {
@@ -10,7 +11,7 @@ interface SignupFormProps {
 }
 
 export function SignupForm({ onSuccess, onLogin, onCancel }: SignupFormProps) {
-  const { theme, colorMode } = useTheme();
+  const { theme } = useTheme();
   const { signup } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

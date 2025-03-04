@@ -40,6 +40,22 @@ To run the Vumi Showcase application:
 npm run dev:showcase
 ```
 
+### TikTok Icon Fix
+
+There's a known issue with the TikTok icon component where it contains JSX syntax in a .js file, causing import errors. To fix this:
+
+```bash
+# Run the automated fix script
+npm run fix-tiktok-icon
+```
+
+This script:
+- Replaces JSX syntax with React.createElement in TikTokIcon.js
+- Creates appropriate JSX (.jsx) and TypeScript (.tsx) versions of the icon
+- Updates imports in relevant files
+
+If you encounter import errors with the TikTok icon after pulling changes, run this script.
+
 ### Building for Production
 
 To build the Vumi Gigs application:

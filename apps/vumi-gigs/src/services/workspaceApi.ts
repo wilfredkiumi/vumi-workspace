@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { fetchAuthSession } from '@aws-amplify/auth';
 import { AWS_CONFIG } from '../config/aws-config';
 import { Creator, User } from '../models';

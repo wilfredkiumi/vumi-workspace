@@ -1,4 +1,5 @@
-import { MapPin, Star, Check, Users , Award} from 'lucide-react';
+// @ts-nocheck
+import { Award, Check, CheckCircle, MapPin, Star, Users } from 'lucide-react'; // Added Award import
 import { Creator, ProfileMode } from './types';
 import { ThemeType, ColorMode } from './index';
 

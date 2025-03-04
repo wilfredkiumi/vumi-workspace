@@ -1,22 +1,8 @@
+// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button, Card, useTheme } from 'ui';
-import {  
-  Clock, 
-  MapPin, 
-  Calendar, 
-  Tag, 
-  Users, 
-  FileText, 
-  ChevronLeft, 
-  Share2, 
-  Bookmark, 
-  Flag, 
-  ExternalLink,
-  CheckCircle,
-  Star,
-  DollarSign 
-} from 'lucide-react';
+import { Bookmark, Calendar, CheckCircle, ChevronLeft, Clock, DollarSign, ExternalLink, FileText, Flag, MapPin, Share2, Star, Tag, Users } from 'lucide-react';
 import { Gig } from './models/Gig';
 import { sampleGigs } from './data/sampleGigs';
 

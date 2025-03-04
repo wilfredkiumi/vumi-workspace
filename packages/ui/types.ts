@@ -228,3 +228,6 @@ export interface StudioPlan {
   popular?: boolean;
   recommended?: boolean;
 }
+
+export type ThemeType = 'default' | 'gigs' | 'creator' | 'business';
+export type ColorMode = 'light' | 'dark';

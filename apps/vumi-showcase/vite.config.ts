@@ -8,10 +8,16 @@ export default defineConfig({
   optimizeDeps: {
     include: ['ui', '@vumi/shared'],
     esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
       target: 'es2020'
     }
   },
   build: {
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+    },
     target: 'es2020',
     commonjsOptions: {
       include: [/node_modules/, /ui/, /@vumi\/shared/]

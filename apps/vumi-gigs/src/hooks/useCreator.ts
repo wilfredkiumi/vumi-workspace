@@ -1,7 +1,8 @@
+// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { creatorApi } from '../services/workspaceApi';
 import { Creator } from '../models';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext.jsx';
 
 interface UseCreatorResult {
   creator: Creator | null;

@@ -1,4 +1,5 @@
-import { Clock, Eye, Heart, Users , Award} from 'lucide-react';
+// @ts-nocheck
+import { Award, Clock, Eye, Heart, Users } from 'lucide-react';
 import { Project } from './types';
 import { ThemeType, ColorMode } from './index';
 

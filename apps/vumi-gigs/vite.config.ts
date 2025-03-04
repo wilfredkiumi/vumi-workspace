@@ -7,16 +7,28 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@vumi/shared': path.resolve(__dirname, '../../packages/shared/src')
+      '@': path.resolve(__dirname, './src'),
+    },
+    extensions: ['.mjs', '.js', '.jsx', '.ts', '.tsx', '.json'],
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': 'jsx',
+      },
+    },
+  },
+  build: {
+    rollupOptions: {
+      external: ['react', 'react-dom'],
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true
     }
   },
   define: {
     global: 'window',
     'process.env': {}
-  },
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-    include: ['@vumi/shared'],
   },
   server: {
     port: 3000,

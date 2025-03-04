@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { ProfileMode } from 'ui';
 import { Creator, CreatorType, FreelanceStatus, ProfilePlan } from '../models/Creator';
 

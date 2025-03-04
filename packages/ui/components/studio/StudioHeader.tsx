@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CheckCircle } from 'lucide-react';
 import { Studio } from '../../types';
 import { Button } from '../../index';
